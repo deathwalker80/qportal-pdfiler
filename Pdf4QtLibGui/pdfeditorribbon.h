@@ -30,6 +30,10 @@
 #include <QPointer>
 
 class QMainWindow;
+class QToolBar;
+class QSpinBox;
+class QDoubleSpinBox;
+class QLabel;
 class QComboBox;
 class QFontComboBox;
 class QToolButton;
@@ -48,12 +52,14 @@ class PDFRibbonPage;
 class PDFActionManager;
 class PDFProgramController;
 
-/// Ribbon of the editor: the commands of the application are arranged into
-/// tabs and groups with labels and descriptions, as in the office
+/// Ribbon of the editor and of the viewer: the commands of the application are
+/// arranged into tabs and groups with labels and descriptions, as in the office
 /// applications (File, Home, Insert, Edit, Comments, References, Page, Tools,
 /// View, Help). The ribbon uses the actions of the application and of the
 /// plugins, it doesn't implement the commands itself, except the controls of
-/// the font and of the paragraph, which drive the page content editor.
+/// the font and of the paragraph, which drive the page content editor. Commands,
+/// which the application doesn't have (the viewer can't edit), are left out,
+/// together with the groups and the pages, which remain empty.
 class PDFEditorRibbon : public QObject
 {
     Q_OBJECT
@@ -69,8 +75,21 @@ public:
 
     PDFRibbon* getRibbon() const { return m_ribbon; }
 
+    /// Places the ribbon into the main window: the ribbon replaces the menu bar
+    /// and the toolbars (the menus stay available for their shortcuts).
+    /// \param classicToolBar Main toolbar of the window, the ribbon is placed before it
+    void installIntoMainWindow(QToolBar* classicToolBar);
+
+    /// Places the page number and the zoom into the status bar, as in the office applications
+    void createStatusBarControls(QSpinBox* pageNumberSpinBox, QLabel* pageNumberLabel, QDoubleSpinBox* zoomSpinBox);
+
 private:
     QAction* getAction(int action) const;
+    QList<QAction*> getGroupActions(int actionGroup) const;
+    QIcon getIcon(const QString& fileName) const;
+    QToolButton* createStatusBarButton(QAction* action);
+    void hideClassicToolBars();
+    void updateDrawnIcons();
     QAction* findAction(const QString& objectName) const;
     QList<QAction*> getActions(const QStringList& objectNames) const;
 
@@ -88,7 +107,7 @@ private:
     void createFontGroup(PDFRibbonPage* page);
     void createParagraphGroup(PDFRibbonPage* page);
 
-    QToolButton* createTextStyleButton(const QIcon& icon, const QString& title, const QString& description, bool checkable);
+    QToolButton* createTextStyleButton(const QString& title, const QString& description, bool checkable);
 
     /// Returns the page content editor. If the editor is not active and
     /// \p activate is true, the editor is activated first.
@@ -114,6 +133,8 @@ private:
     QAction* m_advancedFindAction;
     QAction* m_outlineNewItemAction;
     PDFRibbon* m_ribbon;
+    PDFRibbonPage* m_homePage;
+    QToolBar* m_ribbonToolBar;
 
     QAction* m_editorActivateAction;
     QPointer<pdf::PDFPageContentEditorWidget> m_connectedEditorWidget;

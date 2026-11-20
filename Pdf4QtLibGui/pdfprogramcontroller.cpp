@@ -2868,6 +2868,8 @@ void PDFProgramController::onActionOptionsTriggered()
     if (dialog.exec() == QDialog::Accepted)
     {
         const bool pluginsChanged = m_enabledPlugins != dialog.getEnabledPlugins();
+        const bool appearanceChanged = m_settings->getSettings().m_colorScheme != dialog.getSettings().m_colorScheme ||
+                                       m_settings->getSettings().m_language != dialog.getSettings().m_language;
 
         m_settings->setSettings(dialog.getSettings());
         m_settings->setColorManagementSystemSettings(dialog.getCMSSettings());
@@ -2892,6 +2894,12 @@ void PDFProgramController::onActionOptionsTriggered()
         if (pluginsChanged)
         {
             QMessageBox::information(m_mainWindow, tr("Plugins"), tr("Plugin on/off state has been changed. Please restart application to apply settings."));
+        }
+
+        if (appearanceChanged)
+        {
+            // Color scheme and language are applied at the start of the application
+            QMessageBox::information(m_mainWindow, tr("Appearance"), tr("The color scheme or the language has been changed. Please restart the application to apply the change."));
         }
     }
 }

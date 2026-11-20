@@ -30,6 +30,11 @@
 
 #include <QMenu>
 #include <QLabel>
+#include <QToolBar>
+#include <QMenuBar>
+#include <QSpinBox>
+#include <QStatusBar>
+#include <QBoxLayout>
 #include <QTimer>
 #include <QPainter>
 #include <QPixmap>
@@ -62,6 +67,8 @@ PDFEditorRibbon::PDFEditorRibbon(QMainWindow* mainWindow,
     m_advancedFindAction(advancedFindAction),
     m_outlineNewItemAction(outlineNewItemAction),
     m_ribbon(new PDFRibbon(mainWindow)),
+    m_homePage(nullptr),
+    m_ribbonToolBar(nullptr),
     m_editorActivateAction(nullptr),
     m_fontComboBox(nullptr),
     m_fontSizeComboBox(nullptr),
@@ -83,6 +90,7 @@ PDFEditorRibbon::PDFEditorRibbon(QMainWindow* mainWindow,
 
     if (searchWidget)
     {
+        searchWidget->setMinimumWidth(pdf::PDFWidgetUtils::scaleDPI_x(searchWidget, 220));
         m_ribbon->setCornerWidget(searchWidget);
     }
 
@@ -100,7 +108,8 @@ PDFEditorRibbon::PDFEditorRibbon(QMainWindow* mainWindow,
     m_ribbon->finish();
 
     // Home page is opened at the start, as in the office applications
-    m_ribbon->setCurrentPage(1);
+    m_ribbon->setCurrentPage(m_homePage);
+    connect(m_ribbon, &PDFRibbon::paletteChanged, this, &PDFEditorRibbon::updateDrawnIcons);
 
     if (m_editorActivateAction)
     {
@@ -118,6 +127,111 @@ PDFEditorRibbon::PDFEditorRibbon(QMainWindow* mainWindow,
 QAction* PDFEditorRibbon::getAction(int action) const
 {
     return m_actionManager->getAction(PDFActionManager::Action(action));
+}
+
+QList<QAction*> PDFEditorRibbon::getGroupActions(int actionGroup) const
+{
+    // Annotations (notes, stamps) can be created only, if the application
+    // can edit them - the viewer has the stamp actions, but not the editing.
+    if (!getAction(PDFActionManager::DeleteAnnotation))
+    {
+        return QList<QAction*>();
+    }
+
+    if (QActionGroup* group = m_actionManager->getActionGroup(PDFActionManager::ActionGroup(actionGroup)))
+    {
+        return group->actions();
+    }
+
+    return QList<QAction*>();
+}
+
+QIcon PDFEditorRibbon::getIcon(const QString& fileName) const
+{
+    // Icons of the actions are converted for the dark theme by the action manager,
+    // icons of the ribbon itself (menus, icons of the actions without icon) here.
+    QIcon icon(fileName);
+    if (pdf::PDFWidgetUtils::isDarkTheme())
+    {
+        icon = pdf::PDFWidgetUtils::convertIconForDarkTheme(icon, pdf::PDFWidgetUtils::scaleDPI(m_ribbon, QSize(32, 32)), m_ribbon->devicePixelRatioF());
+    }
+    return icon;
+}
+
+void PDFEditorRibbon::installIntoMainWindow(QToolBar* classicToolBar)
+{
+    // The ribbon is placed into its own toolbar, so it spans the whole
+    // width of the window, above the sidebar.
+    m_ribbonToolBar = new QToolBar(tr("Ribbon"), m_mainWindow);
+    m_ribbonToolBar->setObjectName("RibbonToolBar");
+    m_ribbonToolBar->setMovable(false);
+    m_ribbonToolBar->setFloatable(false);
+    m_ribbonToolBar->setAllowedAreas(Qt::TopToolBarArea);
+    m_ribbonToolBar->setContentsMargins(0, 0, 0, 0);
+    m_ribbonToolBar->layout()->setContentsMargins(0, 0, 0, 0);
+    m_ribbonToolBar->setStyleSheet("QToolBar#RibbonToolBar { border: none; padding: 0px; spacing: 0px; }");
+    m_ribbonToolBar->toggleViewAction()->setVisible(false);
+    m_ribbonToolBar->addWidget(m_ribbon);
+    m_mainWindow->insertToolBar(classicToolBar, m_ribbonToolBar);
+    m_mainWindow->insertToolBarBreak(classicToolBar);
+    hideClassicToolBars();
+
+    m_mainWindow->menuBar()->hide();
+
+    // Shortcuts of the actions are active, even if the menu bar is hidden
+    for (QAction* action : m_actionManager->getActions())
+    {
+        m_mainWindow->addAction(action);
+    }
+}
+
+void PDFEditorRibbon::createStatusBarControls(QSpinBox* pageNumberSpinBox, QLabel* pageNumberLabel, QDoubleSpinBox* zoomSpinBox)
+{
+    QWidget* pageWidget = new QWidget(m_mainWindow);
+    QHBoxLayout* pageLayout = new QHBoxLayout(pageWidget);
+    pageLayout->setContentsMargins(0, 0, 0, 0);
+    pageLayout->setSpacing(pdf::PDFWidgetUtils::scaleDPI_x(pageWidget, 2));
+    pageLayout->addWidget(createStatusBarButton(getAction(PDFActionManager::GoToPreviousPage)));
+    pageLayout->addWidget(new QLabel(tr("Page"), pageWidget));
+    pageLayout->addWidget(pageNumberSpinBox);
+    pageLayout->addWidget(pageNumberLabel);
+    pageLayout->addWidget(createStatusBarButton(getAction(PDFActionManager::GoToNextPage)));
+    m_mainWindow->statusBar()->addPermanentWidget(pageWidget);
+
+    QWidget* zoomWidget = new QWidget(m_mainWindow);
+    QHBoxLayout* zoomLayout = new QHBoxLayout(zoomWidget);
+    zoomLayout->setContentsMargins(pdf::PDFWidgetUtils::scaleDPI_x(zoomWidget, 12), 0, 0, 0);
+    zoomLayout->setSpacing(pdf::PDFWidgetUtils::scaleDPI_x(zoomWidget, 2));
+    zoomLayout->addWidget(createStatusBarButton(getAction(PDFActionManager::FitPage)));
+    zoomLayout->addWidget(createStatusBarButton(getAction(PDFActionManager::FitWidth)));
+    zoomLayout->addWidget(createStatusBarButton(getAction(PDFActionManager::ZoomOut)));
+    zoomLayout->addWidget(zoomSpinBox);
+    zoomLayout->addWidget(createStatusBarButton(getAction(PDFActionManager::ZoomIn)));
+    m_mainWindow->statusBar()->addPermanentWidget(zoomWidget);
+}
+
+QToolButton* PDFEditorRibbon::createStatusBarButton(QAction* action)
+{
+    QToolButton* button = new QToolButton(m_mainWindow);
+    button->setDefaultAction(action);
+    button->setAutoRaise(true);
+    button->setFocusPolicy(Qt::NoFocus);
+    button->setIconSize(pdf::PDFWidgetUtils::scaleDPI(button, QSize(16, 16)));
+    return button;
+}
+
+void PDFEditorRibbon::hideClassicToolBars()
+{
+    // Toolbars of the application and of the plugins are replaced by the ribbon. The
+    // state of the window (restored from the settings) can make them visible again.
+    for (QToolBar* toolBar : m_mainWindow->findChildren<QToolBar*>(Qt::FindDirectChildrenOnly))
+    {
+        if (toolBar != m_ribbonToolBar)
+        {
+            toolBar->hide();
+            toolBar->toggleViewAction()->setVisible(false);
+        }
+    }
 }
 
 QAction* PDFEditorRibbon::findAction(const QString& objectName) const
@@ -159,7 +273,7 @@ void PDFEditorRibbon::createFilePage()
         recentFileActions << action;
     }
     recentFileActions << getAction(PDFActionManager::ClearRecentFileHistory);
-    documentGroup->addLargeMenu(QIcon(":/resources/book.svg"), tr("Recent"), tr("Opens one of the documents, which were opened recently."), recentFileActions);
+    documentGroup->addLargeMenu(getIcon(":/resources/book.svg"), tr("Recent"), tr("Opens one of the documents, which were opened recently."), recentFileActions);
 
     documentGroup->addLargeAction(getAction(PDFActionManager::Save), tr("Save"), tr("Saves the changes into the document."));
     documentGroup->addSmallAction(getAction(PDFActionManager::SaveAs), tr("Save As"), tr("Saves the document into a new file, the original file stays unchanged."));
@@ -169,7 +283,7 @@ void PDFEditorRibbon::createFilePage()
     PDFRibbonGroup* shareGroup = page->addGroup(tr("Print and Share"));
     shareGroup->addLargeAction(getAction(PDFActionManager::Print), tr("Print"), tr("Prints the document on a printer."));
     shareGroup->addLargeAction(getAction(PDFActionManager::SendByMail), tr("Send by E-Mail"), tr("Creates a new e-mail message with the document as an attachment."));
-    shareGroup->addLargeAction(getAction(PDFActionManager::RenderToImages), tr("Export as Images"), tr("Saves the pages of the document as image files (PNG, JPEG, TIFF and others)."), QIcon(":/resources/extract-image.svg"));
+    shareGroup->addLargeAction(getAction(PDFActionManager::RenderToImages), tr("Export as Images"), tr("Saves the pages of the document as image files (PNG, JPEG, TIFF and others)."), getIcon(":/resources/extract-image.svg"));
 
     PDFRibbonGroup* infoGroup = page->addGroup(tr("Information"));
     infoGroup->addLargeAction(getAction(PDFActionManager::Properties), tr("Properties"), tr("Shows the properties of the document: title, author, page size, fonts, security."));
@@ -183,6 +297,7 @@ void PDFEditorRibbon::createFilePage()
 void PDFEditorRibbon::createHomePage()
 {
     PDFRibbonPage* page = m_ribbon->addPage(tr("Home"));
+    m_homePage = page;
 
     PDFRibbonGroup* clipboardGroup = page->addGroup(tr("Clipboard"));
     clipboardGroup->addLargeAction(getAction(PDFActionManager::CopyText), tr("Copy"), tr("Copies the selected text to the clipboard. Select the text first by the Select Text tool."));
@@ -234,7 +349,7 @@ void PDFEditorRibbon::createInsertPage()
     PDFRibbonGroup* illustrationsGroup = page->addGroup(tr("Illustrations"));
     illustrationsGroup->setPrerequisite(m_editorActivateAction);
     illustrationsGroup->addLargeAction(findAction("editortool_createSvgImageAction"), tr("Image"), tr("Inserts an image into the page. Draw a rectangle by the mouse and select the image file."));
-    illustrationsGroup->addLargeMenu(QIcon(":/pdfplugins/editorplugin/create-rectangle.svg"), tr("Shapes"), tr("Inserts a shape into the page: rectangle, line, point or freehand drawing."),
+    illustrationsGroup->addLargeMenu(getIcon(":/pdfplugins/editorplugin/create-rectangle.svg"), tr("Shapes"), tr("Inserts a shape into the page: rectangle, line, point or freehand drawing."),
                                      getActions({ "editortool_createRectangleAction", "editortool_createRoundedRectangleAction", "editortool_createHorizontalLineAction",
                                                   "editortool_createVerticalLineAction", "editortool_createLineAction", "editortool_createDotAction",
                                                   "editortool_createFreehandCurveAction" }));
@@ -244,7 +359,7 @@ void PDFEditorRibbon::createInsertPage()
 
     PDFRibbonGroup* linksGroup = page->addGroup(tr("Links"));
     linksGroup->addLargeAction(getAction(PDFActionManager::CreateHyperlink), tr("Link"), tr("Inserts a link to a web page or to a file. Draw a rectangle over the text or the image, which will be the link."));
-    linksGroup->addLargeMenu(QIcon(":/resources/hyperlink.svg"), tr("Link in Document"), tr("Inserts a link to another place of this document."),
+    linksGroup->addLargeMenu(getIcon(":/resources/hyperlink.svg"), tr("Link in Document"), tr("Inserts a link to another place of this document."),
                              { getAction(PDFActionManager::CreateHyperlinkToThisPDFFit), getAction(PDFActionManager::CreateHyperlinkToThisPDFFitH),
                                getAction(PDFActionManager::CreateHyperlinkToThisPDFFitV), getAction(PDFActionManager::CreateHyperlinkToThisPDFFitR),
                                getAction(PDFActionManager::CreateHyperlinkToThisPDFFitB), getAction(PDFActionManager::CreateHyperlinkToThisPDFFitBH),
@@ -253,10 +368,10 @@ void PDFEditorRibbon::createInsertPage()
     linksGroup->addSmallAction(m_outlineNewItemAction, tr("Outline Item"), tr("Inserts a new item of the outline (table of contents in the sidebar), which points to the current place of the document."));
 
     PDFRibbonGroup* commentsGroup = page->addGroup(tr("Comments"));
-    commentsGroup->addLargeMenu(QIcon(":/resources/annot-sticky-note.svg"), tr("Note"), tr("Inserts a note (sticky note) into the page. Click on the place of the note."),
-                                m_actionManager->getActionGroup(PDFActionManager::CreateStickyNoteGroup)->actions());
-    commentsGroup->addLargeMenu(QIcon(":/resources/bubble.svg"), tr("Stamp"), tr("Inserts a stamp (Approved, Draft, Confidential, ...) into the page."),
-                                m_actionManager->getActionGroup(PDFActionManager::CreateStampGroup)->actions());
+    commentsGroup->addLargeMenu(getIcon(":/resources/annot-sticky-note.svg"), tr("Note"), tr("Inserts a note (sticky note) into the page. Click on the place of the note."),
+                                getGroupActions(PDFActionManager::CreateStickyNoteGroup));
+    commentsGroup->addLargeMenu(getIcon(":/resources/bubble.svg"), tr("Stamp"), tr("Inserts a stamp (Approved, Draft, Confidential, ...) into the page."),
+                                getGroupActions(PDFActionManager::CreateStampGroup));
 }
 
 void PDFEditorRibbon::createEditPage()
@@ -274,15 +389,20 @@ void PDFEditorRibbon::createEditPage()
     insertGroup->setPrerequisite(m_editorActivateAction);
     insertGroup->addLargeAction(findAction("editortool_createTextAction"), tr("Text Box"), tr("Inserts a text into the page. Draw a rectangle by the mouse and write the text. The text becomes a part of the page."));
     insertGroup->addLargeAction(findAction("editortool_createSvgImageAction"), tr("Image"), tr("Inserts an image into the page. Draw a rectangle by the mouse and select the image file."));
-    insertGroup->addLargeMenu(QIcon(":/pdfplugins/editorplugin/create-rectangle.svg"), tr("Shapes"), tr("Inserts a shape into the page: rectangle, line, point or freehand drawing."),
+    insertGroup->addLargeMenu(getIcon(":/pdfplugins/editorplugin/create-rectangle.svg"), tr("Shapes"), tr("Inserts a shape into the page: rectangle, line, point or freehand drawing."),
                               getActions({ "editortool_createRectangleAction", "editortool_createRoundedRectangleAction", "editortool_createHorizontalLineAction",
                                            "editortool_createVerticalLineAction", "editortool_createLineAction", "editortool_createDotAction",
                                            "editortool_createFreehandCurveAction" }));
 
-    PDFRibbonGroup* pageGroup = page->addGroup(tr("Page"));
-    pageGroup->addLargeAction(getAction(PDFActionManager::PageGeometry), tr("Page Size"), tr("Changes the size, the margins and the cropping of the pages."));
-    pageGroup->addSmallAction(getAction(PDFActionManager::RotateLeft), tr("Rotate Left"), tr("Rotates the view of the pages by 90 degrees to the left."));
-    pageGroup->addSmallAction(getAction(PDFActionManager::RotateRight), tr("Rotate Right"), tr("Rotates the view of the pages by 90 degrees to the right."));
+    // The page is meant for the editing of the content, without the editor
+    // (in the viewer) the commands of the pages are only on the Page tab
+    if (m_editorActivateAction)
+    {
+        PDFRibbonGroup* pageGroup = page->addGroup(tr("Page"));
+        pageGroup->addLargeAction(getAction(PDFActionManager::PageGeometry), tr("Page Size"), tr("Changes the size, the margins and the cropping of the pages."));
+        pageGroup->addSmallAction(getAction(PDFActionManager::RotateLeft), tr("Rotate Left"), tr("Rotates the view of the pages by 90 degrees to the left."));
+        pageGroup->addSmallAction(getAction(PDFActionManager::RotateRight), tr("Rotate Right"), tr("Rotates the view of the pages by 90 degrees to the right."));
+    }
 }
 
 void PDFEditorRibbon::createCommentsPage()
@@ -290,11 +410,11 @@ void PDFEditorRibbon::createCommentsPage()
     PDFRibbonPage* page = m_ribbon->addPage(tr("Comments"));
 
     PDFRibbonGroup* notesGroup = page->addGroup(tr("Notes"));
-    notesGroup->addLargeMenu(QIcon(":/resources/annot-sticky-note.svg"), tr("New Note"), tr("Inserts a note (sticky note) into the page. Click on the place of the note."),
-                             m_actionManager->getActionGroup(PDFActionManager::CreateStickyNoteGroup)->actions());
+    notesGroup->addLargeMenu(getIcon(":/resources/annot-sticky-note.svg"), tr("New Note"), tr("Inserts a note (sticky note) into the page. Click on the place of the note."),
+                             getGroupActions(PDFActionManager::CreateStickyNoteGroup));
     notesGroup->addLargeAction(getAction(PDFActionManager::CreateInlineText), tr("Text Comment"), tr("Inserts a text as a comment, which is displayed over the page and can be removed later."));
-    notesGroup->addLargeMenu(QIcon(":/resources/bubble.svg"), tr("Stamp"), tr("Inserts a stamp (Approved, Draft, Confidential, ...) into the page."),
-                             m_actionManager->getActionGroup(PDFActionManager::CreateStampGroup)->actions());
+    notesGroup->addLargeMenu(getIcon(":/resources/bubble.svg"), tr("Stamp"), tr("Inserts a stamp (Approved, Draft, Confidential, ...) into the page."),
+                             getGroupActions(PDFActionManager::CreateStampGroup));
 
     PDFRibbonGroup* markupGroup = page->addGroup(tr("Text Markup"));
     markupGroup->addLargeAction(getAction(PDFActionManager::CreateTextHighlight), tr("Highlight"), tr("Highlights the text, which is selected by the mouse, as by a highlighter."));
@@ -311,10 +431,10 @@ void PDFEditorRibbon::createCommentsPage()
     drawingGroup->addSmallAction(getAction(PDFActionManager::CreatePolygon), tr("Polygon"), tr("Draws a polygon as a comment. Finish it by a double-click."));
 
     PDFRibbonGroup* deleteGroup = page->addGroup(tr("Delete"));
-    deleteGroup->addLargeAction(getAction(PDFActionManager::DeleteAnnotation), tr("Delete Comments"), tr("Deletes the selected comments, notes, highlights and stamps."), QIcon(":/resources/close.svg"));
+    deleteGroup->addLargeAction(getAction(PDFActionManager::DeleteAnnotation), tr("Delete Comments"), tr("Deletes the selected comments, notes, highlights and stamps."), getIcon(":/resources/delete-annotations.svg"));
 
     PDFRibbonGroup* measureGroup = page->addGroup(tr("Measure"));
-    measureGroup->addLargeMenu(QIcon(":/pdfplugins/dimensiontool/linear.svg"), tr("Measure"), tr("Measures distances, perimeters, areas and angles on the page."),
+    measureGroup->addLargeMenu(getIcon(":/pdfplugins/dimensiontool/linear.svg"), tr("Measure"), tr("Measures distances, perimeters, areas and angles on the page."),
                                getActions({ "dimensiontool_LinearHorizontalAction", "dimensiontool_LinearVerticalAction", "dimensiontool_LinearAction",
                                             "dimensiontool_PerimeterAction", "dimensiontool_RectanglePerimeterAction", "dimensiontool_AreaAction",
                                             "dimensiontool_RectangleAreaAction", "dimensiontool_AngleAction", "dimensiontool_CalibrateAction" }));
@@ -328,7 +448,10 @@ void PDFEditorRibbon::createCommentsPage()
     signGroup->addSmallAction(findAction("signaturetool_signElectronicallyAction"), tr("Sign Electronically"), tr("Inserts the prepared signature into the document."));
     signGroup->addSmallAction(findAction("signaturetool_signDigitallyAction"), tr("Sign with Certificate"), tr("Signs the document digitally by a certificate (smart card or certificate file)."));
     signGroup->setPrerequisite(nullptr);
-    signGroup->addSmallAction(getAction(PDFActionManager::CertificateManager), tr("Certificates"), tr("Manages the certificates used for the digital signatures."));
+    if (findAction("signaturetool_activateAction"))
+    {
+        signGroup->addSmallAction(getAction(PDFActionManager::CertificateManager), tr("Certificates"), tr("Manages the certificates used for the digital signatures."));
+    }
 }
 
 void PDFEditorRibbon::createReferencesPage()
@@ -337,7 +460,7 @@ void PDFEditorRibbon::createReferencesPage()
 
     PDFRibbonGroup* outlineGroup = page->addGroup(tr("Table of Contents"));
     outlineGroup->addLargeAction(m_outlineNewItemAction, tr("Add Item"), tr("Inserts a new item of the outline (table of contents in the sidebar), which points to the current place of the document."));
-    outlineGroup->addLargeAction(m_sidebarAction, tr("Show Sidebar"), tr("Shows the sidebar with the outline, thumbnails of the pages, bookmarks, attachments and notes."), QIcon(":/resources/sidebar-visibility.svg"));
+    outlineGroup->addLargeAction(m_sidebarAction, tr("Show Sidebar"), tr("Shows the sidebar with the outline, thumbnails of the pages, bookmarks, attachments and notes."), getIcon(":/resources/sidebar-visibility.svg"));
 
     PDFRibbonGroup* bookmarksGroup = page->addGroup(tr("Bookmarks"));
     bookmarksGroup->addLargeAction(getAction(PDFActionManager::BookmarkPage), tr("Bookmark Page"), tr("Adds the current page to the bookmarks, to return to it quickly."));
@@ -349,7 +472,7 @@ void PDFEditorRibbon::createReferencesPage()
 
     PDFRibbonGroup* linksGroup = page->addGroup(tr("Links"));
     linksGroup->addLargeAction(getAction(PDFActionManager::CreateHyperlink), tr("Link"), tr("Inserts a link to a web page or to a file. Draw a rectangle over the text or the image, which will be the link."));
-    linksGroup->addLargeMenu(QIcon(":/resources/hyperlink.svg"), tr("Link in Document"), tr("Inserts a link to another place of this document."),
+    linksGroup->addLargeMenu(getIcon(":/resources/hyperlink.svg"), tr("Link in Document"), tr("Inserts a link to another place of this document."),
                              { getAction(PDFActionManager::CreateHyperlinkToThisPDFFit), getAction(PDFActionManager::CreateHyperlinkToThisPDFFitH),
                                getAction(PDFActionManager::CreateHyperlinkToThisPDFFitV), getAction(PDFActionManager::CreateHyperlinkToThisPDFFitR),
                                getAction(PDFActionManager::CreateHyperlinkToThisPDFFitB), getAction(PDFActionManager::CreateHyperlinkToThisPDFFitBH),
@@ -372,7 +495,7 @@ void PDFEditorRibbon::createPagePage()
 
     PDFRibbonGroup* scanGroup = page->addGroup(tr("Scanned Pages"));
     scanGroup->addLargeAction(findAction("scannerplugin_ScanPages"), tr("Scan"), tr("Acquires the pages from a scanner into the document."));
-    scanGroup->addLargeAction(getAction(PDFActionManager::PrepareScannedPages), tr("Straighten and Crop"), tr("Straightens the skewed scanned pages, crops their margins and splits the double pages."), QIcon(":/resources/page.svg"));
+    scanGroup->addLargeAction(getAction(PDFActionManager::PrepareScannedPages), tr("Straighten and Crop"), tr("Straightens the skewed scanned pages, crops their margins and splits the double pages."), getIcon(":/resources/page.svg"));
 
     PDFRibbonGroup* navigationGroup = page->addGroup(tr("Go To"));
     navigationGroup->addSmallAction(getAction(PDFActionManager::GoToDocumentStart), tr("First Page"), tr("Goes to the first page of the document."));
@@ -397,14 +520,14 @@ void PDFEditorRibbon::createToolsPage()
 
     PDFRibbonGroup* protectGroup = page->addGroup(tr("Protection"));
     protectGroup->addLargeAction(getAction(PDFActionManager::Encryption), tr("Protect Document"), tr("Protects the document by a password and sets the permissions (printing, copying, changes)."));
-    protectGroup->addLargeMenu(QIcon(":/pdfplugins/redactplugin/redact-rectangle.svg"), tr("Redact"), tr("Marks the parts of the pages, which will be removed permanently (blacked out), then creates the redacted document."),
+    protectGroup->addLargeMenu(getIcon(":/pdfplugins/redactplugin/redact-rectangle.svg"), tr("Redact"), tr("Marks the parts of the pages, which will be removed permanently (blacked out), then creates the redacted document."),
                                getActions({ "redactplugin_RedactRectangle", "redactplugin_RedactText", "redactplugin_RedactTextSelection",
                                             "redactplugin_RedactPage", "redactplugin_CreateRedactedDocument" }));
     protectGroup->addSmallAction(getAction(PDFActionManager::Sanitize), tr("Remove Hidden Data"), tr("Removes the hidden information from the document: metadata, scripts, attachments, comments."));
     protectGroup->addSmallAction(getAction(PDFActionManager::RemoveExternalLinks), tr("Remove External Links"), tr("Removes the links to web pages and to other files from the document."));
 
     PDFRibbonGroup* readGroup = page->addGroup(tr("Read Aloud"));
-    readGroup->addLargeMenu(QIcon(":/resources/speech.svg"), tr("Audio Book"), tr("Creates an audio book from the text of the document."),
+    readGroup->addLargeMenu(getIcon(":/resources/speech.svg"), tr("Audio Book"), tr("Creates an audio book from the text of the document."),
                             getActions({ "actionAudioBook_CreateTextStream", "actionAudioBook_SynchronizeFromTableToGraphics", "actionAudioBook_SynchronizeFromGraphicsToTable",
                                          "actionAudioBook_ActivateSelection", "actionAudioBook_DeactivateSelection", "actionAudioBook_SelectByRectangle",
                                          "actionAudioBook_SelectByContainedText", "actionAudioBook_SelectByRegularExpression", "actionAudioBook_SelectByPageList",
@@ -417,7 +540,7 @@ void PDFEditorRibbon::createToolsPage()
     advancedGroup->addSmallAction(getAction(PDFActionManager::ShowRenderingErrors), tr("Rendering Errors"), tr("Lists the errors found while the pages were displayed."));
     advancedGroup->addSmallAction(findAction("actionOutputPreview_OutputPreview"), tr("Output Preview"), tr("Shows the separations of the colors for the printing (for the printing house)."));
     advancedGroup->addSmallAction(findAction("actionOutputPreview_InkCoverage"), tr("Ink Coverage"), tr("Computes the coverage of the inks of the pages (for the printing house)."));
-    advancedGroup->addSmallMenu(QIcon(":/pdfplugins/softproofing/soft-proofing.svg"), tr("Soft Proofing"), tr("Simulates the colors of the print on the screen."),
+    advancedGroup->addSmallMenu(getIcon(":/pdfplugins/softproofing/soft-proofing.svg"), tr("Soft Proofing"), tr("Simulates the colors of the print on the screen."),
                                 getActions({ "actionSoftProofing_EnableSoftProofing", "actionSoftProofing_EnableGamutChecking", "actionSoftProofing_ShowSettings" }));
 
     PDFRibbonGroup* settingsGroup = page->addGroup(tr("Settings"));
@@ -453,10 +576,10 @@ void PDFEditorRibbon::createViewPage()
     colorsGroup->addSmallAction(getAction(PDFActionManager::RenderOptionCustomColors), tr("Custom Colors"), tr("Shows the pages with the colors set in the options."));
 
     PDFRibbonGroup* showGroup = page->addGroup(tr("Show"));
-    showGroup->addLargeAction(m_sidebarAction, tr("Sidebar"), tr("Shows the sidebar with the outline, thumbnails of the pages, bookmarks, attachments and notes."), QIcon(":/resources/sidebar-visibility.svg"));
-    showGroup->addLargeAction(getAction(PDFActionManager::FullscreenMode), tr("Full Screen"), tr("Shows the document on the whole screen. Press Esc to return."), QIcon(":/resources/zoom-fit.svg"));
+    showGroup->addLargeAction(m_sidebarAction, tr("Sidebar"), tr("Shows the sidebar with the outline, thumbnails of the pages, bookmarks, attachments and notes."), getIcon(":/resources/sidebar-visibility.svg"));
+    showGroup->addLargeAction(getAction(PDFActionManager::FullscreenMode), tr("Full Screen"), tr("Shows the document on the whole screen. Press Esc to return."), getIcon(":/resources/zoom-fit.svg"));
     showGroup->addSmallAction(getAction(PDFActionManager::RenderOptionDisplayAnnotations), tr("Comments"), tr("Shows or hides the comments, notes and highlights of the pages."));
-    showGroup->addSmallMenu(QIcon(":/resources/rendering.svg"), tr("Display Quality"), tr("Settings of the quality of the display of the pages (smoothing of the text and of the images)."),
+    showGroup->addSmallMenu(getIcon(":/resources/rendering.svg"), tr("Display Quality"), tr("Settings of the quality of the display of the pages (smoothing of the text and of the images)."),
                             { getAction(PDFActionManager::RenderOptionAntialiasing), getAction(PDFActionManager::RenderOptionTextAntialiasing),
                               getAction(PDFActionManager::RenderOptionSmoothPictures), getAction(PDFActionManager::RenderOptionIgnoreOptionalContentSettings),
                               getAction(PDFActionManager::RenderOptionDisplayRenderTimes) });
@@ -473,9 +596,8 @@ void PDFEditorRibbon::createHelpPage()
 
 void PDFEditorRibbon::createFontGroup(PDFRibbonPage* page)
 {
-    // The font group is placed on two pages (Home and Edit), but the controls
-    // exist only once - they are created for the first page only.
-    if (m_fontComboBox)
+    // Font is set only for the page content editor (the viewer has no editor)
+    if (!m_editorActivateAction || m_fontComboBox)
     {
         return;
     }
@@ -499,13 +621,10 @@ void PDFEditorRibbon::createFontGroup(PDFRibbonPage* page)
     m_fontSizeComboBox->setCurrentText("12");
     m_fontSizeComboBox->setToolTip(PDFRibbonGroup::createToolTip(tr("Font Size"), tr("Size of the text in points."), QKeySequence()));
 
-    // Letters of the bold, italic and underline buttons are translated (for example
-    // "G", "C", "S" in Italian), so the icons are created from the translations.
-    const QColor letterColor = QApplication::palette().color(QPalette::WindowText);
-    m_boldButton = createTextStyleButton(createLetterIcon(tr("B", "Letter on the Bold button").at(0), QFont::Bold, false, false, letterColor), tr("Bold"), tr("Writes the text in bold."), true);
-    m_italicButton = createTextStyleButton(createLetterIcon(tr("I", "Letter on the Italic button").at(0), QFont::Normal, true, false, letterColor), tr("Italic"), tr("Writes the text in italic."), true);
-    m_underlineButton = createTextStyleButton(createLetterIcon(tr("U", "Letter on the Underline button").at(0), QFont::Normal, false, true, letterColor), tr("Underline"), tr("Underlines the text."), true);
-    m_textColorButton = createTextStyleButton(createLetterIcon(QChar('A'), QFont::Normal, false, true, m_textColor), tr("Font Color"), tr("Changes the color of the text."), false);
+    m_boldButton = createTextStyleButton(tr("Bold"), tr("Writes the text in bold."), true);
+    m_italicButton = createTextStyleButton(tr("Italic"), tr("Writes the text in italic."), true);
+    m_underlineButton = createTextStyleButton(tr("Underline"), tr("Underlines the text."), true);
+    m_textColorButton = createTextStyleButton(tr("Font Color"), tr("Changes the color of the text."), false);
 
     fontGroup->addWidgetRow({ m_fontComboBox, m_fontSizeComboBox });
     fontGroup->addWidgetRow({ m_boldButton, m_italicButton, m_underlineButton, m_textColorButton });
@@ -524,35 +643,56 @@ void PDFEditorRibbon::createFontGroup(PDFRibbonPage* page)
 
 void PDFEditorRibbon::createParagraphGroup(PDFRibbonPage* page)
 {
-    if (m_alignLeftButton)
+    if (!m_editorActivateAction || m_alignLeftButton)
     {
         return;
     }
 
     PDFRibbonGroup* paragraphGroup = page->addGroup(tr("Paragraph"));
 
-    m_alignLeftButton = createTextStyleButton(createAlignmentIcon(Qt::AlignLeft), tr("Align Left"), tr("Aligns the text to the left edge of the text box."), true);
-    m_alignCenterButton = createTextStyleButton(createAlignmentIcon(Qt::AlignHCenter), tr("Center"), tr("Centers the text in the text box."), true);
-    m_alignRightButton = createTextStyleButton(createAlignmentIcon(Qt::AlignRight), tr("Align Right"), tr("Aligns the text to the right edge of the text box."), true);
+    m_alignLeftButton = createTextStyleButton(tr("Align Left"), tr("Aligns the text to the left edge of the text box."), true);
+    m_alignCenterButton = createTextStyleButton(tr("Center"), tr("Centers the text in the text box."), true);
+    m_alignRightButton = createTextStyleButton(tr("Align Right"), tr("Aligns the text to the right edge of the text box."), true);
 
     paragraphGroup->addWidgetRow({ m_alignLeftButton, m_alignCenterButton, m_alignRightButton });
 
     connect(m_alignLeftButton, &QToolButton::clicked, this, [this]() { onAlignmentClicked(Qt::AlignLeft); });
     connect(m_alignCenterButton, &QToolButton::clicked, this, [this]() { onAlignmentClicked(Qt::AlignHCenter); });
     connect(m_alignRightButton, &QToolButton::clicked, this, [this]() { onAlignmentClicked(Qt::AlignRight); });
+
+    updateDrawnIcons();
 }
 
-QToolButton* PDFEditorRibbon::createTextStyleButton(const QIcon& icon, const QString& title, const QString& description, bool checkable)
+QToolButton* PDFEditorRibbon::createTextStyleButton(const QString& title, const QString& description, bool checkable)
 {
     QToolButton* button = new QToolButton(m_ribbon);
     button->setAutoRaise(true);
     button->setFocusPolicy(Qt::NoFocus);
-    button->setIcon(icon);
     button->setIconSize(pdf::PDFWidgetUtils::scaleDPI(button, QSize(16, 16)));
     button->setCheckable(checkable);
     button->setToolTip(PDFRibbonGroup::createToolTip(title, description, QKeySequence()));
     button->setProperty("ribbonSmall", true);
     return button;
+}
+
+void PDFEditorRibbon::updateDrawnIcons()
+{
+    if (!m_boldButton || !m_alignLeftButton)
+    {
+        return;
+    }
+
+    // Icons are drawn in the color of the text of the current palette (light or dark theme).
+    // Letters of the bold, italic and underline buttons are translated (for example
+    // "G", "C", "S" in Italian), so the icons are created from the translations.
+    const QColor letterColor = QApplication::palette().color(QPalette::WindowText);
+    m_boldButton->setIcon(createLetterIcon(tr("B", "Letter on the Bold button").at(0), QFont::Bold, false, false, letterColor));
+    m_italicButton->setIcon(createLetterIcon(tr("I", "Letter on the Italic button").at(0), QFont::Normal, true, false, letterColor));
+    m_underlineButton->setIcon(createLetterIcon(tr("U", "Letter on the Underline button").at(0), QFont::Normal, false, true, letterColor));
+    m_textColorButton->setIcon(createLetterIcon(QChar('A'), QFont::Normal, false, true, m_textColor));
+    m_alignLeftButton->setIcon(createAlignmentIcon(Qt::AlignLeft));
+    m_alignCenterButton->setIcon(createAlignmentIcon(Qt::AlignHCenter));
+    m_alignRightButton->setIcon(createAlignmentIcon(Qt::AlignRight));
 }
 
 pdf::PDFPageContentEditorWidget* PDFEditorRibbon::getEditorWidget(bool activate)

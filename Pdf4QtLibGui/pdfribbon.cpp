@@ -36,6 +36,8 @@
 #include <QScrollArea>
 #include <QStackedWidget>
 
+#include <algorithm>
+
 #include "pdfdbgheap.h"
 
 namespace pdfviewer
@@ -423,6 +425,7 @@ void PDFRibbonPage::finish()
         }
 
         m_layout->addWidget(group);
+        m_isEmpty = false;
     }
 
     m_groups.clear();
@@ -561,6 +564,21 @@ void PDFRibbon::finish()
         pageHeight = qMax(pageHeight, page->sizeHint().height());
     }
 
+    // Empty pages are removed together with their tabs (from the last one, so the
+    // indices of the remaining pages stay valid)
+    for (int i = int(m_ribbonPages.size()) - 1; i >= 0; --i)
+    {
+        if (m_ribbonPages[i]->isEmpty())
+        {
+            QScrollArea* scrollArea = m_scrollAreas[i];
+            m_tabBar->removeTab(i);
+            m_pages->removeWidget(scrollArea);
+            delete scrollArea;
+            m_scrollAreas.erase(m_scrollAreas.begin() + i);
+            m_ribbonPages.erase(m_ribbonPages.begin() + i);
+        }
+    }
+
     // All pages have the same height (the highest one), so the document
     // doesn't move, when another page of the ribbon is selected.
     m_pages->setFixedHeight(pageHeight + 2);
@@ -568,9 +586,13 @@ void PDFRibbon::finish()
     updateScrollButtons();
 }
 
-void PDFRibbon::setCurrentPage(int index)
+void PDFRibbon::setCurrentPage(PDFRibbonPage* page)
 {
-    m_tabBar->setCurrentIndex(index);
+    auto it = std::find(m_ribbonPages.cbegin(), m_ribbonPages.cend(), page);
+    if (it != m_ribbonPages.cend())
+    {
+        m_tabBar->setCurrentIndex(int(std::distance(m_ribbonPages.cbegin(), it)));
+    }
 }
 
 bool PDFRibbon::eventFilter(QObject* watched, QEvent* event)
@@ -592,9 +614,14 @@ void PDFRibbon::changeEvent(QEvent* event)
 {
     QFrame::changeEvent(event);
 
-    if (event->type() == QEvent::PaletteChange && !m_isUpdatingStyleSheet)
+    const bool isPaletteChanged = event->type() == QEvent::PaletteChange ||
+                                  event->type() == QEvent::ApplicationPaletteChange ||
+                                  event->type() == QEvent::ThemeChange;
+
+    if (isPaletteChanged && !m_isUpdatingStyleSheet)
     {
         updateStyleSheet();
+        Q_EMIT paletteChanged();
     }
 }
 

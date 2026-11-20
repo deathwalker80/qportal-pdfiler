@@ -149,9 +149,13 @@ public:
     /// Removes empty groups and finishes the layout of the page
     void finish();
 
+    /// Returns true, if the page has no group (all groups were empty)
+    bool isEmpty() const { return m_isEmpty; }
+
 private:
     QHBoxLayout* m_layout;
     std::vector<PDFRibbonGroup*> m_groups;
+    bool m_isEmpty = true;
 };
 
 /// Ribbon: tabs with the pages of the commands, divided into groups, as in the
@@ -171,10 +175,18 @@ public:
 
     void setCornerWidget(QWidget* widget);
 
-    /// Finishes all pages, removes the empty groups. Call it after all controls are added.
+    /// Finishes all pages, removes the empty groups and the empty pages (an application
+    /// without some commands, for example the viewer, has fewer pages). Call it after all
+    /// controls are added.
     void finish();
 
-    void setCurrentPage(int index);
+    void setCurrentPage(PDFRibbonPage* page);
+
+signals:
+    /// The palette was changed (for example the light or dark theme of the system),
+    /// the colors of the ribbon are already updated. Icons drawn by the user of the
+    /// ribbon should be drawn again.
+    void paletteChanged();
 
 protected:
     virtual bool eventFilter(QObject* watched, QEvent* event) override;

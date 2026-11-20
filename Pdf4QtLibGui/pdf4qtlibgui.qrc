@@ -64,6 +64,7 @@
         <file>resources/annot-sticky-note.svg</file>
         <file>resources/annot-straight-line.svg</file>
         <file>resources/close.svg</file>
+        <file>resources/delete-annotations.svg</file>
         <file>resources/copy-text.svg</file>
         <file>resources/deselect-text.svg</file>
         <file>resources/encryption.svg</file>

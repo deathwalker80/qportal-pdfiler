@@ -48,7 +48,6 @@
 #include "pdfwidgetutils.h"
 #include "pdfactioncombobox.h"
 #include "pdfeditorribbon.h"
-#include "pdfribbon.h"
 
 #include <QPainter>
 #include <QFileDialog>
@@ -381,81 +380,10 @@ PDFEditorMainWindow::~PDFEditorMainWindow()
 
 void PDFEditorMainWindow::createRibbon(QAction* advancedFindAction, QAction* outlineNewItemAction, QWidget* searchWidget)
 {
-    searchWidget->setMinimumWidth(pdf::PDFWidgetUtils::scaleDPI_x(searchWidget, 220));
-
     PDFEditorRibbon* editorRibbon = new PDFEditorRibbon(this, m_actionManager, m_programController, m_sidebarDockWidget->toggleViewAction(),
                                                         advancedFindAction, outlineNewItemAction, searchWidget);
-
-    // The ribbon replaces the menu bar and the toolbars. It is placed into its own toolbar,
-    // so it spans the whole width of the window, above the sidebar.
-    m_ribbonToolBar = new QToolBar(tr("Ribbon"), this);
-    m_ribbonToolBar->setObjectName("RibbonToolBar");
-    m_ribbonToolBar->setMovable(false);
-    m_ribbonToolBar->setFloatable(false);
-    m_ribbonToolBar->setAllowedAreas(Qt::TopToolBarArea);
-    m_ribbonToolBar->setContentsMargins(0, 0, 0, 0);
-    m_ribbonToolBar->layout()->setContentsMargins(0, 0, 0, 0);
-    m_ribbonToolBar->setStyleSheet("QToolBar#RibbonToolBar { border: none; padding: 0px; spacing: 0px; }");
-    m_ribbonToolBar->toggleViewAction()->setVisible(false);
-    m_ribbonToolBar->addWidget(editorRibbon->getRibbon());
-    insertToolBar(ui->mainToolBar, m_ribbonToolBar);
-    insertToolBarBreak(ui->mainToolBar);
-    hideClassicToolBars();
-
-    menuBar()->hide();
-
-    // Shortcuts of the actions are active, even if the menu bar is hidden
-    for (QAction* action : m_actionManager->getActions())
-    {
-        addAction(action);
-    }
-
-    // Page number and zoom are in the status bar, as in the office applications
-    QWidget* pageWidget = new QWidget(this);
-    QHBoxLayout* pageLayout = new QHBoxLayout(pageWidget);
-    pageLayout->setContentsMargins(0, 0, 0, 0);
-    pageLayout->setSpacing(pdf::PDFWidgetUtils::scaleDPI_x(this, 2));
-    pageLayout->addWidget(createStatusBarButton(ui->actionGoToPreviousPage));
-    pageLayout->addWidget(new QLabel(tr("Page"), pageWidget));
-    pageLayout->addWidget(m_pageNumberSpinBox);
-    pageLayout->addWidget(m_pageNumberLabel);
-    pageLayout->addWidget(createStatusBarButton(ui->actionGoToNextPage));
-    statusBar()->addPermanentWidget(pageWidget);
-
-    QWidget* zoomWidget = new QWidget(this);
-    QHBoxLayout* zoomLayout = new QHBoxLayout(zoomWidget);
-    zoomLayout->setContentsMargins(pdf::PDFWidgetUtils::scaleDPI_x(this, 12), 0, 0, 0);
-    zoomLayout->setSpacing(pdf::PDFWidgetUtils::scaleDPI_x(this, 2));
-    zoomLayout->addWidget(createStatusBarButton(ui->actionFitPage));
-    zoomLayout->addWidget(createStatusBarButton(ui->actionFitWidth));
-    zoomLayout->addWidget(createStatusBarButton(ui->actionZoom_Out));
-    zoomLayout->addWidget(m_pageZoomSpinBox);
-    zoomLayout->addWidget(createStatusBarButton(ui->actionZoom_In));
-    statusBar()->addPermanentWidget(zoomWidget);
-}
-
-QToolButton* PDFEditorMainWindow::createStatusBarButton(QAction* action)
-{
-    QToolButton* button = new QToolButton(this);
-    button->setDefaultAction(action);
-    button->setAutoRaise(true);
-    button->setFocusPolicy(Qt::NoFocus);
-    button->setIconSize(pdf::PDFWidgetUtils::scaleDPI(this, QSize(16, 16)));
-    return button;
-}
-
-void PDFEditorMainWindow::hideClassicToolBars()
-{
-    // Toolbars of the application and of the plugins are replaced by the ribbon. The
-    // state of the window (restored from the settings) can make them visible again.
-    for (QToolBar* toolBar : findChildren<QToolBar*>(Qt::FindDirectChildrenOnly))
-    {
-        if (toolBar != m_ribbonToolBar)
-        {
-            toolBar->hide();
-            toolBar->toggleViewAction()->setVisible(false);
-        }
-    }
+    editorRibbon->installIntoMainWindow(ui->mainToolBar);
+    editorRibbon->createStatusBarControls(m_pageNumberSpinBox, m_pageNumberLabel, m_pageZoomSpinBox);
 }
 
 QMenu* PDFEditorMainWindow::createPopupMenu()

@@ -23061,16 +23061,6 @@ Fai doppio clic sulla riga per aprire il testo della licenza.</translation>
             <source> / %1</source>
             <translation> / %1</translation>
         </message>
-        <message>
-            <location filename="../Pdf4QtLibGui/pdfeditormainwindow.cpp" line="+0" />
-            <source>Ribbon</source>
-            <translation>Barra multifunzione</translation>
-        </message>
-        <message>
-            <location line="+0" />
-            <source>Page</source>
-            <translation>Pagina</translation>
-        </message>
     </context>
     <context>
         <name>pdfviewer::PDFEditorRibbon</name>
@@ -24629,6 +24619,11 @@ Fai doppio clic sulla riga per aprire il testo della licenza.</translation>
             <location line="+0" />
             <source>Aligns the text to the right edge of the text box.</source>
             <translation>Allinea il testo al bordo destro della casella di testo.</translation>
+        </message>
+        <message>
+            <location filename="../Pdf4QtLibGui/pdfeditorribbon.cpp" line="+0" />
+            <source>Ribbon</source>
+            <translation>Barra multifunzione</translation>
         </message>
     </context>
     <context>
@@ -28285,6 +28280,16 @@ Se esiste una versione integrata della lingua, verrà usata di nuovo. I progetti
             <location line="+19" />
             <source>Rendering of page %1: %2 errors occured.</source>
             <translation>Rendering della pagina %1: %2 errori.</translation>
+        </message>
+        <message>
+            <location filename="../Pdf4QtLibGui/pdfprogramcontroller.cpp" line="+0" />
+            <source>Appearance</source>
+            <translation>Aspetto</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>The color scheme or the language has been changed. Please restart the application to apply the change.</source>
+            <translation>Il tema dei colori o la lingua sono stati cambiati. Riavvia l&apos;applicazione per applicare la modifica.</translation>
         </message>
     </context>
     <context>

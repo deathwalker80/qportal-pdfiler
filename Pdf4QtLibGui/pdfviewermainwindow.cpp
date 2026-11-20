@@ -47,6 +47,7 @@
 #include "pdfadvancedtools.h"
 #include "pdfwidgetutils.h"
 #include "pdfactioncombobox.h"
+#include "pdfeditorribbon.h"
 
 #include <QPainter>
 #include <QSettings>
@@ -193,12 +194,10 @@ PDFViewerMainWindow::PDFViewerMainWindow(QWidget* parent) :
     m_pageNumberSpinBox->setAlignment(Qt::AlignCenter);
     connect(m_pageNumberSpinBox, &QSpinBox::editingFinished, this, &PDFViewerMainWindow::onPageNumberSpinboxEditingFinished);
 
-    // Page control
+    // Page control (in the status bar, as in the office applications, the toolbar is replaced by the ribbon)
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction(ui->actionGoToDocumentStart);
     ui->mainToolBar->addAction(ui->actionGoToPreviousPage);
-    ui->mainToolBar->addWidget(m_pageNumberSpinBox);
-    ui->mainToolBar->addWidget(m_pageNumberLabel);
     ui->mainToolBar->addAction(ui->actionGoToNextPage);
     ui->mainToolBar->addAction(ui->actionGoToDocumentEnd);
 
@@ -215,7 +214,6 @@ PDFViewerMainWindow::PDFViewerMainWindow(QWidget* parent) :
     m_pageZoomSpinBox->setFixedWidth(pdf::PDFWidgetUtils::scaleDPI_x(m_pageNumberSpinBox, 80));
     m_pageZoomSpinBox->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
     connect(m_pageZoomSpinBox, &QDoubleSpinBox::editingFinished, this, &PDFViewerMainWindow::onPageZoomSpinboxEditingFinished);
-    ui->mainToolBar->addWidget(m_pageZoomSpinBox);
 
     // Fit page, width, height
     ui->mainToolBar->addAction(ui->actionFitPage);
@@ -254,7 +252,6 @@ PDFViewerMainWindow::PDFViewerMainWindow(QWidget* parent) :
     connect(m_progress, &pdf::PDFProgress::progressFinished, this, &PDFViewerMainWindow::onProgressFinished);
 
     PDFActionComboBox* actionComboBox = new PDFActionComboBox(this);
-    menuBar()->setCornerWidget(actionComboBox);
     m_programController->finishInitialization();
 
     if (pdf::PDFToolManager* toolManager = m_programController->getToolManager())
@@ -264,6 +261,12 @@ PDFViewerMainWindow::PDFViewerMainWindow(QWidget* parent) :
 
     m_actionManager->styleActions();
     m_programController->initActionComboBox(actionComboBox);
+
+    // Ribbon as in the editor, the commands of the editing are not in the viewer
+    PDFEditorRibbon* ribbon = new PDFEditorRibbon(this, m_actionManager, m_programController, m_sidebarDockWidget->toggleViewAction(),
+                                                  nullptr, nullptr, actionComboBox);
+    ribbon->installIntoMainWindow(ui->mainToolBar);
+    ribbon->createStatusBarControls(m_pageNumberSpinBox, m_pageNumberLabel, m_pageZoomSpinBox);
 
 #ifndef NDEBUG
     pdf::PDFWidgetUtils::checkMenuAccessibility(this);
@@ -279,6 +282,12 @@ PDFViewerMainWindow::~PDFViewerMainWindow()
     m_actionManager = nullptr;
 
     delete ui;
+}
+
+QMenu* PDFViewerMainWindow::createPopupMenu()
+{
+    // The menu with the toolbars is not offered, the toolbars are replaced by the ribbon
+    return nullptr;
 }
 
 void PDFViewerMainWindow::onActionQuitTriggered()

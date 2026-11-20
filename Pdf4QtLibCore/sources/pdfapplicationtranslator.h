@@ -58,6 +58,10 @@ public:
 
     Q_ENUM(ELanguage)
 
+    /// Language used, when the user has not chosen one (Q-Portal PDFiler is always
+    /// in Italian, regardless of the language of the system)
+    static constexpr ELanguage DEFAULT_LANGUAGE = E_LANGUAGE_ITALIAN;
+
     void installTranslator();
     void uninstallTranslator();
     void loadSettings();
@@ -76,7 +80,7 @@ private:
     QString getLanguageFileName() const;
 
     QTranslator* m_translator = nullptr;
-    ELanguage m_language = E_LANGUAGE_AUTOMATIC_SELECTION;
+    ELanguage m_language = DEFAULT_LANGUAGE;
 };
 
 }   // namespace

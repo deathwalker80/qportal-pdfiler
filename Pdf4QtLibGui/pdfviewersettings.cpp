@@ -379,7 +379,7 @@ PDFViewerSettings::Settings::Settings() :
     m_smoothWheelScrolling(true),
     m_wheelScrollHorizontalSpeedPercent(WHEEL_SCROLL_SPEED_PERCENT_DEFAULT),
     m_wheelScrollVerticalSpeedPercent(WHEEL_SCROLL_SPEED_PERCENT_DEFAULT),
-    m_language(pdf::PDFApplicationTranslator::E_LANGUAGE_AUTOMATIC_SELECTION)
+    m_language(pdf::PDFApplicationTranslator::DEFAULT_LANGUAGE)
 {
 
 }
