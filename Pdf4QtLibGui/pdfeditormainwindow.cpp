@@ -367,7 +367,7 @@ PDFEditorMainWindow::PDFEditorMainWindow(QWidget* parent) :
     m_programController->initActionComboBox(actionComboBox);
 
     // Start page is displayed, while no document is opened; it provides actions for the ribbon
-    m_welcomePage = new PDFWelcomePage(this, m_actionManager, m_programController, m_programController->getPdfWidget());
+    m_welcomePage = new PDFWelcomePage(this, m_actionManager, m_programController, true, m_programController->getPdfWidget());
     addAction(m_welcomePage->getNewDocumentAction());
 
     createRibbon(toggleAdvancedFindAction, m_sidebarWidget->getOutlineNewItemAction(), actionComboBox);

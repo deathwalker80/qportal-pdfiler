@@ -24,8 +24,8 @@ cmake_minimum_required(VERSION 3.16)
 
 set(PDF4QT_VERSION 1.7.1.0)
 # Q-Portal PDFiler: product version (MSI, About dialog, --version). PDF4QT_VERSION stays the upstream engine version.
-set(QPORTAL_PDFILER_VERSION 1.0.1.0)
-set(QPORTAL_PDFILER_VERSION_LABEL "1.0.1.0 Beta")
+set(QPORTAL_PDFILER_VERSION 1.0.1.1)
+set(QPORTAL_PDFILER_VERSION_LABEL "1.0.1.1 Beta")
 message(STATUS "Build type - CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
 project(PDF4QT VERSION ${PDF4QT_VERSION} LANGUAGES CXX)

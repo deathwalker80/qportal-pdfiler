@@ -52,6 +52,7 @@ namespace pdfviewer
 PDFWelcomePage::PDFWelcomePage(QMainWindow* mainWindow,
                                PDFActionManager* actionManager,
                                PDFProgramController* programController,
+                               bool isEditor,
                                QWidget* parent) :
     QWidget(parent),
     m_mainWindow(mainWindow),
@@ -83,7 +84,13 @@ PDFWelcomePage::PDFWelcomePage(QMainWindow* mainWindow,
     m_splitPdfAction->setObjectName("actionPdfToolSplit");
     connect(m_splitPdfAction, &QAction::triggered, this, &PDFWelcomePage::onMergeOrSplitPdf);
 
-    for (QAction* action : { m_newDocumentAction, m_createPdfAction, m_mergePdfAction, m_splitPdfAction })
+    // The viewer cannot create documents, so it doesn't offer the new document
+    if (isEditor)
+    {
+        m_actionManager->addAdditionalAction(m_newDocumentAction);
+    }
+
+    for (QAction* action : { m_createPdfAction, m_mergePdfAction, m_splitPdfAction })
     {
         m_actionManager->addAdditionalAction(action);
     }
@@ -114,10 +121,13 @@ PDFWelcomePage::PDFWelcomePage(QMainWindow* mainWindow,
 
     QAction* openAction = m_actionManager->getAction(PDFActionManager::Open);
 
-    QPushButton* newButton = new QPushButton(tr("New Document"), leftPanel);
-    newButton->setObjectName("welcomeMainButton");
-    connect(newButton, &QPushButton::clicked, m_newDocumentAction, &QAction::trigger);
-    leftLayout->addWidget(newButton);
+    if (isEditor)
+    {
+        QPushButton* newButton = new QPushButton(tr("New Document"), leftPanel);
+        newButton->setObjectName("welcomeMainButton");
+        connect(newButton, &QPushButton::clicked, m_newDocumentAction, &QAction::trigger);
+        leftLayout->addWidget(newButton);
+    }
 
     QPushButton* openButton = new QPushButton(tr("Open Document"), leftPanel);
     openButton->setObjectName("welcomeMainButton");
@@ -155,15 +165,33 @@ PDFWelcomePage::PDFWelcomePage(QMainWindow* mainWindow,
     tilesLayout->setSpacing(pdf::PDFWidgetUtils::scaleDPI_x(this, 12));
 
     QList<QPushButton*> tiles;
-    tiles << createTile(openAction, ":/resources/open.svg", tr("Open a PDF"), tr("Read, comment, sign or change a document."));
-    tiles << createTile(m_newDocumentAction, ":/resources/page.svg", tr("New document"), tr("Create an empty A4 document and write into it."));
-    tiles << createTile(m_createPdfAction, ":/resources/extract-image.svg", tr("Create a PDF from files"), tr("Word, Excel, PowerPoint, images, text: one PDF from many files."));
-    tiles << createTile(m_mergePdfAction, ":/resources/sidebar-thumbnails.svg", tr("Merge PDF documents"), tr("Join documents, sort, rotate and remove the pages."));
-    tiles << createTile(m_splitPdfAction, ":/resources/pce-layout-h.svg", tr("Split a PDF"), tr("Extract pages or divide a document into more files."));
+    if (isEditor)
+    {
+        tiles << createTile(openAction, getIcon(":/resources/open.svg"), tr("Open a PDF"), tr("Read, comment, sign or change a document."));
+        tiles << createTile(m_newDocumentAction, getIcon(":/resources/page.svg"), tr("New document"), tr("Create an empty A4 document and write into it."));
+    }
+    else
+    {
+        tiles << createTile(openAction, getIcon(":/resources/open.svg"), tr("Open a PDF"), tr("Read and print a document."));
+    }
+
+    tiles << createTile(m_createPdfAction, getIcon(":/resources/extract-image.svg"), tr("Create a PDF from files"), tr("Word, Excel, PowerPoint, images, text: one PDF from many files."));
+    tiles << createTile(m_mergePdfAction, getIcon(":/resources/sidebar-thumbnails.svg"), tr("Merge PDF documents"), tr("Join documents, sort, rotate and remove the pages."));
+    tiles << createTile(m_splitPdfAction, getIcon(":/resources/pce-layout-h.svg"), tr("Split a PDF"), tr("Extract pages or divide a document into more files."));
+
+    // Scanning is provided by a plugin (the icon of its action is already prepared for the theme)
+    for (QAction* action : m_actionManager->getActions())
+    {
+        if (action && action->objectName() == "scannerplugin_ScanPages")
+        {
+            tiles << createTile(action, action->icon(), tr("Scan"), tr("Acquire pages from a scanner into a new PDF document."));
+            break;
+        }
+    }
 
     if (QAction* batchOcrAction = m_actionManager->getAction(PDFActionManager::BatchRecognizeText))
     {
-        tiles << createTile(batchOcrAction, ":/resources/ocr.svg", tr("Recognize text (OCR)"), tr("Make scanned documents searchable, more files at once."));
+        tiles << createTile(batchOcrAction, getIcon(":/resources/ocr.svg"), tr("Recognize text (OCR)"), tr("Make scanned documents searchable, more files at once."));
     }
 
     for (int i = 0; i < tiles.size(); ++i)
@@ -238,7 +266,17 @@ void PDFWelcomePage::changeEvent(QEvent* event)
     }
 }
 
-QPushButton* PDFWelcomePage::createTile(QAction* action, const QString& iconFileName, const QString& title, const QString& description)
+QIcon PDFWelcomePage::getIcon(const QString& fileName) const
+{
+    QIcon icon(fileName);
+    if (pdf::PDFWidgetUtils::isDarkTheme())
+    {
+        icon = pdf::PDFWidgetUtils::convertIconForDarkTheme(icon, pdf::PDFWidgetUtils::scaleDPI(this, QSize(36, 36)), devicePixelRatioF());
+    }
+    return icon;
+}
+
+QPushButton* PDFWelcomePage::createTile(QAction* action, const QIcon& icon, const QString& title, const QString& description)
 {
     QPushButton* tile = new QPushButton(this);
     tile->setObjectName("welcomeTile");
@@ -252,11 +290,6 @@ QPushButton* PDFWelcomePage::createTile(QAction* action, const QString& iconFile
     tileLayout->setSpacing(pdf::PDFWidgetUtils::scaleDPI_x(this, 12));
 
     const QSize iconSize = pdf::PDFWidgetUtils::scaleDPI(this, QSize(36, 36));
-    QIcon icon(iconFileName);
-    if (pdf::PDFWidgetUtils::isDarkTheme())
-    {
-        icon = pdf::PDFWidgetUtils::convertIconForDarkTheme(icon, iconSize, devicePixelRatioF());
-    }
 
     QLabel* iconLabel = new QLabel(tile);
     iconLabel->setPixmap(icon.pixmap(iconSize));

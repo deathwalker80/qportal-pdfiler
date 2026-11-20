@@ -44,7 +44,7 @@ namespace pdfviewer
 /// and tool tip (a short title and a description, like the screen tips of the
 /// office applications), and it follows the state of the action (enabled,
 /// visible, checked, icon).
-class PDFRibbonButton : public QToolButton
+class PDF4QTLIBGUILIBSHARED_EXPORT PDFRibbonButton : public QToolButton
 {
     Q_OBJECT
 
@@ -79,7 +79,7 @@ private:
 
 /// Group of the ribbon page (for example "Clipboard" or "Font"), the controls
 /// are placed in a row and the title of the group is displayed below them.
-class PDFRibbonGroup : public QFrame
+class PDF4QTLIBGUILIBSHARED_EXPORT PDFRibbonGroup : public QFrame
 {
     Q_OBJECT
 
@@ -137,7 +137,7 @@ private:
 };
 
 /// Page of the ribbon (tab), contains groups
-class PDFRibbonPage : public QWidget
+class PDF4QTLIBGUILIBSHARED_EXPORT PDFRibbonPage : public QWidget
 {
     Q_OBJECT
 

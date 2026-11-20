@@ -17,8 +17,8 @@
         </message>
         <message>
             <location filename="../Pdf4QtPageMaster/main.cpp" line="+76" />
-            <source>Q-Portal PDFiler PageMaster</source>
-            <translation>Q-Portal PDFiler - Organizza pagine</translation>
+            <source>Q-Portal PDFiler - PDF Tools</source>
+            <translation>Q-Portal PDFiler - Strumenti PDF</translation>
         </message>
         <message>
             <location filename="../Pdf4QtDiff/main.cpp" line="+43" />
@@ -20450,6 +20450,578 @@ li.checked::marker { content: "\2612"; }
             <source>Converting &apos;%1&apos; to PDF...</source>
             <translation>Conversione di &apos;%1&apos; in PDF...</translation>
         </message>
+        <message>
+            <location line="+0" />
+            <source>Undoes the last change.</source>
+            <translation>Annulla l&apos;ultima modifica.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Repeats the change, which was undone.</source>
+            <translation>Ripete la modifica annullata.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Home</source>
+            <translation>Home</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Files</source>
+            <translation>File</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Adds files: PDF, Word, Excel, PowerPoint, images, text. The files can be also dragged into the window.</source>
+            <translation>Aggiunge file: PDF, Word, Excel, PowerPoint, immagini, testo. I file si possono anche trascinare nella finestra.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Add Image</source>
+            <translation>Aggiungi immagine</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Adds an image as a new page.</source>
+            <translation>Aggiunge un&apos;immagine come nuova pagina.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Empty Page</source>
+            <translation>Pagina vuota</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Adds an empty page.</source>
+            <translation>Aggiunge una pagina vuota.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Pages from PDF</source>
+            <translation>Pagine da PDF</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Adds only some pages of a PDF document.</source>
+            <translation>Aggiunge solo alcune pagine di un documento PDF.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Remove All</source>
+            <translation>Togli tutto</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Removes all files from the window and starts again.</source>
+            <translation>Toglie tutti i file dalla finestra e ricomincia da capo.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Pages</source>
+            <translation>Pagine</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Rotate Left</source>
+            <translation>Ruota a sinistra</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Rotates the selected pages by 90 degrees to the left.</source>
+            <translation>Ruota le pagine selezionate di 90 gradi a sinistra.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Rotate Right</source>
+            <translation>Ruota a destra</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Rotates the selected pages by 90 degrees to the right.</source>
+            <translation>Ruota le pagine selezionate di 90 gradi a destra.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Delete Pages</source>
+            <translation>Elimina pagine</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Removes the selected pages.</source>
+            <translation>Elimina le pagine selezionate.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Duplicate</source>
+            <translation>Duplica</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Creates a copy of the selected pages.</source>
+            <translation>Crea una copia delle pagine selezionate.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Restore Deleted</source>
+            <translation>Ripristina eliminate</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Returns the pages, which were removed.</source>
+            <translation>Rimette le pagine che erano state eliminate.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Reset Rotation</source>
+            <translation>Annulla rotazione</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Cancels the rotation of the selected pages.</source>
+            <translation>Annulla la rotazione delle pagine selezionate.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Separate Pages</source>
+            <translation>Pagine singole</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Show All Pages</source>
+            <translation>Mostra tutte le pagine</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows each page of the selected documents separately, so the pages can be sorted, rotated and removed one by one.</source>
+            <translation>Mostra separatamente ogni pagina dei documenti selezionati, così le pagine si possono ordinare, ruotare ed eliminare una per una.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Group</source>
+            <translation>Raggruppa</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Joins the selected pages into one item.</source>
+            <translation>Riunisce le pagine selezionate in un solo elemento.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Clipboard</source>
+            <translation>Appunti</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Cut</source>
+            <translation>Taglia</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Cuts the selected pages.</source>
+            <translation>Taglia le pagine selezionate.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Copy</source>
+            <translation>Copia</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Copies the selected pages.</source>
+            <translation>Copia le pagine selezionate.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Paste</source>
+            <translation>Incolla</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Pastes the pages after the selected page.</source>
+            <translation>Incolla le pagine dopo la pagina selezionata.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Select All</source>
+            <translation>Seleziona tutto</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Selects all pages.</source>
+            <translation>Seleziona tutte le pagine.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Select None</source>
+            <translation>Deseleziona</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Cancels the selection.</source>
+            <translation>Annulla la selezione.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Page Range</source>
+            <translation>Intervallo pagine</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Selects the pages by their numbers, for example 1-5, 8.</source>
+            <translation>Seleziona le pagine per numero, ad esempio 1-5, 8.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>More</source>
+            <translation>Altro</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>More selections: even, odd, portrait and landscape pages.</source>
+            <translation>Altre selezioni: pagine pari, dispari, verticali e orizzontali.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Original (no compression)</source>
+            <translation>Originale (nessuna compressione)</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>High (larger file)</source>
+            <translation>Alta (file più grande)</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Medium (e-mail)</source>
+            <translation>Media (per e-mail)</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Low (smallest file)</source>
+            <translation>Bassa (file più piccolo)</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Create PDF</source>
+            <translation>Crea PDF</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Quality</source>
+            <translation>Qualità</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Quality of the images in the created PDF documents. A lower quality means a smaller file.</source>
+            <translation>Qualità delle immagini nei PDF creati. Una qualità più bassa dà un file più piccolo.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Save as One PDF</source>
+            <translation>Salva come PDF unico</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Creates one PDF document from all pages, in the order shown in the window.</source>
+            <translation>Crea un unico PDF con tutte le pagine, nell&apos;ordine mostrato nella finestra.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Divides the pages into more PDF documents: every page, every N pages, at page numbers, by bookmarks or by size.</source>
+            <translation>Divide le pagine in più PDF: ogni pagina, ogni N pagine, a determinati numeri di pagina, per segnalibri o per dimensione.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>One PDF per Item</source>
+            <translation>Un PDF per elemento</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Creates a separate PDF document from each item of the window.</source>
+            <translation>Crea un PDF separato per ogni elemento della finestra.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>One PDF per Group</source>
+            <translation>Un PDF per gruppo</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Creates a separate PDF document from each group of the pages.</source>
+            <translation>Crea un PDF separato per ogni gruppo di pagine.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Organize</source>
+            <translation>Organizza</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Sort</source>
+            <translation>Ordina</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>By File Name</source>
+            <translation>Per nome file</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Sorts the items by the names of their files.</source>
+            <translation>Ordina gli elementi per nome del file.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Reverse Order</source>
+            <translation>Inverti ordine</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Reverses the order of the items.</source>
+            <translation>Inverte l&apos;ordine degli elementi.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>By Source</source>
+            <translation>Per origine</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Sorts the items by their source documents.</source>
+            <translation>Ordina gli elementi per documento di origine.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>By Page Number</source>
+            <translation>Per numero di pagina</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Sorts the items by their page numbers.</source>
+            <translation>Ordina gli elementi per numero di pagina.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>By Type</source>
+            <translation>Per tipo</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Sorts the items by their type (documents, images, empty pages).</source>
+            <translation>Ordina gli elementi per tipo (documenti, immagini, pagine vuote).</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Groups</source>
+            <translation>Gruppi</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Ungroup</source>
+            <translation>Separa</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows each page of the selected items separately.</source>
+            <translation>Mostra separatamente ogni pagina degli elementi selezionati.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Rename Group</source>
+            <translation>Rinomina gruppo</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Changes the name of the selected group.</source>
+            <translation>Cambia il nome del gruppo selezionato.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Rearranges the pages: even and odd pages, pairs, by bookmarks, alternating pages (scans of two-sided documents).</source>
+            <translation>Riorganizza le pagine: pari e dispari, a coppie, per segnalibri, alternate (scansioni di documenti fronte-retro).</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Page Setup</source>
+            <translation>Imposta pagina</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Page Size</source>
+            <translation>Dimensioni pagina</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Sets the size of the pages, the margins and the placement of the content in the created documents.</source>
+            <translation>Imposta le dimensioni delle pagine, i margini e la posizione del contenuto nei documenti creati.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Crop</source>
+            <translation>Ritaglia</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Crops the margins of the selected pages.</source>
+            <translation>Ritaglia i margini delle pagine selezionate.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Properties</source>
+            <translation>Proprietà</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the properties of the selected item.</source>
+            <translation>Mostra le proprietà dell&apos;elemento selezionato.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Replace</source>
+            <translation>Sostituisci</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Replaces the selected pages by the pages from the clipboard.</source>
+            <translation>Sostituisce le pagine selezionate con quelle negli appunti.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>View</source>
+            <translation>Visualizza</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Zoom</source>
+            <translation>Zoom</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Larger</source>
+            <translation>Più grande</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Enlarges the previews of the pages.</source>
+            <translation>Ingrandisce le anteprime delle pagine.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Smaller</source>
+            <translation>Più piccolo</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Reduces the previews of the pages.</source>
+            <translation>Riduce le anteprime delle pagine.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Show</source>
+            <translation>Mostra</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Details</source>
+            <translation>Dettagli</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the items as a table with details.</source>
+            <translation>Mostra gli elementi in una tabella con i dettagli.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Document Titles</source>
+            <translation>Titoli documenti</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the titles of the documents instead of the names of the files.</source>
+            <translation>Mostra i titoli dei documenti al posto dei nomi dei file.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Work in Progress</source>
+            <translation>Lavoro in corso</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Save Work</source>
+            <translation>Salva lavoro</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Saves the list of the files and pages, to continue later.</source>
+            <translation>Salva l&apos;elenco dei file e delle pagine, per continuare più tardi.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Open Work</source>
+            <translation>Apri lavoro</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Opens the saved list of the files and pages.</source>
+            <translation>Apre l&apos;elenco salvato dei file e delle pagine.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Help</source>
+            <translation>Guida</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>About</source>
+            <translation>Informazioni su</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the version of the application, the authors and the licenses.</source>
+            <translation>Mostra la versione dell&apos;applicazione, gli autori e le licenze.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Close</source>
+            <translation>Chiudi</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Closes the window.</source>
+            <translation>Chiude la finestra.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Ribbon</source>
+            <translation>Barra multifunzione</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Original</source>
+            <translation>Originale</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>High</source>
+            <translation>Alta</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Medium</source>
+            <translation>Media</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Low</source>
+            <translation>Bassa</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Quality:
+%1</source>
+            <translation>Qualità:
+%1</translation>
+        </message>
     </context>
     <context>
         <name>pdfpagemaster::PDFAboutDialog</name>
@@ -30182,6 +30754,21 @@ Vuoi eseguire l'operazione?</translation>
             <location line="+0" />
             <source>The tool for merging and splitting of PDF documents cannot be started (%1).</source>
             <translation>Impossibile avviare lo strumento per unire e dividere i PDF (%1).</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Read and print a document.</source>
+            <translation>Leggi e stampa un documento.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Scan</source>
+            <translation>Scansiona</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Acquire pages from a scanner into a new PDF document.</source>
+            <translation>Acquisisci pagine dallo scanner in un nuovo PDF.</translation>
         </message>
     </context>
 </TS>

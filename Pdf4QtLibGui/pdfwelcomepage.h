@@ -28,6 +28,7 @@
 #include <QWidget>
 
 class QAction;
+class QIcon;
 class QLabel;
 class QMainWindow;
 class QVBoxLayout;
@@ -47,10 +48,12 @@ class PDFWelcomePage : public QWidget
     Q_OBJECT
 
 public:
+    /// \param isEditor True for the editor, false for the viewer (which cannot create or change documents)
     /// \param parent Widget covered by the page (the widget of the document)
     explicit PDFWelcomePage(QMainWindow* mainWindow,
                             PDFActionManager* actionManager,
                             PDFProgramController* programController,
+                            bool isEditor,
                             QWidget* parent);
 
     QAction* getNewDocumentAction() const { return m_newDocumentAction; }
@@ -64,7 +67,8 @@ protected:
     virtual void changeEvent(QEvent* event) override;
 
 private:
-    QPushButton* createTile(QAction* action, const QString& iconFileName, const QString& title, const QString& description);
+    QIcon getIcon(const QString& fileName) const;
+    QPushButton* createTile(QAction* action, const QIcon& icon, const QString& title, const QString& description);
     void updateRecentFiles();
     void updateStyleSheet();
 

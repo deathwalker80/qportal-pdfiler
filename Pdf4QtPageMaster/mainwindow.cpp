@@ -42,6 +42,13 @@
 #include "pdfutils.h"
 
 #include "documentconverter.h"
+#include "pdfribbon.h"
+
+#include <QActionGroup>
+#include <QMenuBar>
+#include <QToolButton>
+#include <QLayout>
+#include <array>
 
 #include <QFileDialog>
 #include <QApplication>
@@ -1075,6 +1082,7 @@ MainWindow::MainWindow(QWidget* parent) :
     QPixmapCache::setCacheLimit(kBytes);
 
     loadSettings();
+    createRibbon();
     updateRecentMenu();
     updateSearchFilter();
     updateActions();
@@ -1240,6 +1248,249 @@ void MainWindow::resizeEvent(QResizeEvent* resizeEvent)
     QMainWindow::resizeEvent(resizeEvent);
 
     ui->documentItemsView->doItemsLayout();
+}
+
+pdf::PDFImageOptimizer::Settings MainWindow::getQualitySettings(Quality quality)
+{
+    pdf::PDFImageOptimizer::Settings settings = pdf::PDFImageOptimizer::Settings::createDefault();
+    settings.enabled = quality != QualityOriginal;
+
+    int imageDpi = 150;
+    int bitonalDpi = 300;
+    int jpegQuality = 85;
+
+    switch (quality)
+    {
+        case QualityOriginal:
+        case QualityHigh:
+            imageDpi = 200;
+            jpegQuality = 90;
+            break;
+
+        case QualityMedium:
+            imageDpi = 150;
+            jpegQuality = 75;
+            break;
+
+        case QualityLow:
+            imageDpi = 96;
+            bitonalDpi = 200;
+            jpegQuality = 50;
+            settings.goal = pdf::PDFImageOptimizer::OptimizationGoal::MinimumSize;
+            break;
+    }
+
+    settings.colorProfile.targetDpi = imageDpi;
+    settings.grayProfile.targetDpi = imageDpi;
+    settings.bitonalProfile.targetDpi = bitonalDpi;
+    settings.colorProfile.jpegQuality = jpegQuality;
+    settings.grayProfile.jpegQuality = jpegQuality;
+    return settings;
+}
+
+void MainWindow::createRibbon()
+{
+    using pdfviewer::PDFRibbon;
+    using pdfviewer::PDFRibbonGroup;
+    using pdfviewer::PDFRibbonPage;
+
+    PDFRibbon* ribbon = new PDFRibbon(this);
+    ribbon->addQuickAccessAction(ui->actionUndo, tr("Undo"), tr("Undoes the last change."));
+    ribbon->addQuickAccessAction(ui->actionRedo, tr("Redo"), tr("Repeats the change, which was undone."));
+
+    QWidget* searchWidget = new QWidget(this);
+    QHBoxLayout* searchLayout = new QHBoxLayout(searchWidget);
+    searchLayout->setContentsMargins(0, 0, 0, 0);
+    searchLayout->addWidget(m_searchEdit);
+    searchLayout->addWidget(m_searchResultLabel);
+    ribbon->setCornerWidget(searchWidget);
+
+    // Home
+    PDFRibbonPage* homePage = ribbon->addPage(tr("Home"));
+
+    PDFRibbonGroup* filesGroup = homePage->addGroup(tr("Files"));
+    filesGroup->addLargeAction(ui->actionAddDocuments, tr("Add Files"), tr("Adds files: PDF, Word, Excel, PowerPoint, images, text. The files can be also dragged into the window."));
+    filesGroup->addSmallAction(ui->actionInsert_Image, tr("Add Image"), tr("Adds an image as a new page."));
+    filesGroup->addSmallAction(ui->actionInsert_Empty_Page, tr("Empty Page"), tr("Adds an empty page."));
+    filesGroup->addSmallAction(ui->actionInsertPDFPages, tr("Pages from PDF"), tr("Adds only some pages of a PDF document."));
+    filesGroup->addLargeAction(ui->actionClear, tr("Remove All"), tr("Removes all files from the window and starts again."));
+
+    PDFRibbonGroup* pagesGroup = homePage->addGroup(tr("Pages"));
+    pagesGroup->addLargeAction(ui->actionRotate_Left, tr("Rotate Left"), tr("Rotates the selected pages by 90 degrees to the left."));
+    pagesGroup->addLargeAction(ui->actionRotate_Right, tr("Rotate Right"), tr("Rotates the selected pages by 90 degrees to the right."));
+    pagesGroup->addLargeAction(ui->actionRemoveSelection, tr("Delete Pages"), tr("Removes the selected pages."));
+    pagesGroup->addSmallAction(ui->actionCloneSelection, tr("Duplicate"), tr("Creates a copy of the selected pages."));
+    pagesGroup->addSmallAction(ui->actionRestoreRemovedItems, tr("Restore Deleted"), tr("Returns the pages, which were removed."));
+    pagesGroup->addSmallAction(ui->actionResetRotation, tr("Reset Rotation"), tr("Cancels the rotation of the selected pages."));
+
+    PDFRibbonGroup* separateGroup = homePage->addGroup(tr("Separate Pages"));
+    separateGroup->addLargeAction(ui->actionUngroup, tr("Show All Pages"), tr("Shows each page of the selected documents separately, so the pages can be sorted, rotated and removed one by one."));
+
+    PDFRibbonGroup* selectGroup = homePage->addGroup(tr("Select"));
+    selectGroup->addSmallAction(ui->actionSelect_All, tr("Select All"), tr("Selects all pages."));
+    selectGroup->addSmallAction(ui->actionSelect_None, tr("Select None"), tr("Cancels the selection."));
+    selectGroup->addSmallAction(ui->actionSelectPageRange, tr("Page Range"), tr("Selects the pages by their numbers, for example 1-5, 8."));
+    selectGroup->addSmallMenu(ui->actionSelect_Even->icon(), tr("More"), tr("More selections: even, odd, portrait and landscape pages."),
+                              { ui->actionSelect_Even, ui->actionSelect_Odd, ui->actionSelect_Portrait, ui->actionSelect_Landscape, ui->actionInvert_Selection, ui->actionSelectVisible });
+
+    // Quality of the created documents
+    QActionGroup* qualityGroup = new QActionGroup(this);
+    qualityGroup->setExclusive(true);
+
+    const std::array<std::pair<Quality, QString>, 4> qualities =
+    {
+        std::make_pair(QualityOriginal, tr("Original (no compression)")),
+        std::make_pair(QualityHigh, tr("High (larger file)")),
+        std::make_pair(QualityMedium, tr("Medium (e-mail)")),
+        std::make_pair(QualityLow, tr("Low (smallest file)"))
+    };
+
+    QList<QAction*> qualityActions;
+    for (const auto& quality : qualities)
+    {
+        QAction* action = new QAction(quality.second, this);
+        action->setCheckable(true);
+        action->setChecked(quality.first == m_settings.quality);
+        action->setData(QVariant());
+        qualityGroup->addAction(action);
+        qualityActions << action;
+
+        const Quality value = quality.first;
+        connect(action, &QAction::triggered, this, [this, value]()
+        {
+            m_settings.quality = value;
+            updateQualityButton();
+            saveSettings();
+        });
+    }
+
+    PDFRibbonGroup* saveGroup = homePage->addGroup(tr("Create PDF"));
+    m_qualityButton = saveGroup->addLargeMenu(ui->actionProperties->icon(), tr("Quality"), tr("Quality of the images in the created PDF documents. A lower quality means a smaller file."), qualityActions);
+    saveGroup->addLargeAction(ui->actionUnited_Document, tr("Save as One PDF"), tr("Creates one PDF document from all pages, in the order shown in the window."));
+    saveGroup->addLargeAction(ui->actionSplit, tr("Split"), tr("Divides the pages into more PDF documents: every page, every N pages, at page numbers, by bookmarks or by size."));
+    saveGroup->addSmallAction(ui->actionSeparate_to_Multiple_Documents, tr("One PDF per Item"), tr("Creates a separate PDF document from each item of the window."));
+    saveGroup->addSmallAction(ui->actionSeparate_to_Multiple_Documents_Grouped, tr("One PDF per Group"), tr("Creates a separate PDF document from each group of the pages."));
+    updateQualityButton();
+
+    // Organize
+    PDFRibbonPage* organizePage = ribbon->addPage(tr("Organize"));
+
+    PDFRibbonGroup* clipboardGroup = organizePage->addGroup(tr("Clipboard"));
+    clipboardGroup->addSmallAction(ui->actionCut, tr("Cut"), tr("Cuts the selected pages."));
+    clipboardGroup->addSmallAction(ui->actionCopy, tr("Copy"), tr("Copies the selected pages."));
+    clipboardGroup->addSmallAction(ui->actionPaste, tr("Paste"), tr("Pastes the pages after the selected page."));
+
+    PDFRibbonGroup* sortGroup = organizePage->addGroup(tr("Sort"));
+    sortGroup->addLargeAction(ui->actionSortByFileName, tr("By File Name"), tr("Sorts the items by the names of their files."));
+    sortGroup->addLargeAction(ui->actionReverseOrder, tr("Reverse Order"), tr("Reverses the order of the items."));
+    sortGroup->addSmallAction(ui->actionSortBySource, tr("By Source"), tr("Sorts the items by their source documents."));
+    sortGroup->addSmallAction(ui->actionSortByPageNumber, tr("By Page Number"), tr("Sorts the items by their page numbers."));
+    sortGroup->addSmallAction(ui->actionSortByType, tr("By Type"), tr("Sorts the items by their type (documents, images, empty pages)."));
+
+    PDFRibbonGroup* groupGroup = organizePage->addGroup(tr("Groups"));
+    groupGroup->addLargeAction(ui->actionGroup, tr("Group"), tr("Joins the selected pages into one item."));
+    groupGroup->addLargeAction(ui->actionUngroup, tr("Ungroup"), tr("Shows each page of the selected items separately."));
+    groupGroup->addSmallAction(ui->actionRenameGroup, tr("Rename Group"), tr("Changes the name of the selected group."));
+    groupGroup->addSmallMenu(ui->actionRegroup_Even_Odd->icon(), tr("Regroup"), tr("Rearranges the pages: even and odd pages, pairs, by bookmarks, alternating pages (scans of two-sided documents)."),
+                             { ui->actionRegroup_Even_Odd, ui->actionRegroup_by_Page_Pairs, ui->actionRegroup_by_Outline, ui->actionRegroup_by_Alternating_Pages,
+                               ui->actionRegroup_by_Alternating_Pages_Reversed_Order, ui->actionRegroup_Reverse });
+
+    PDFRibbonGroup* pageSetupGroup = organizePage->addGroup(tr("Page Setup"));
+    pageSetupGroup->addLargeAction(ui->actionPageGeometry, tr("Page Size"), tr("Sets the size of the pages, the margins and the placement of the content in the created documents."));
+    pageSetupGroup->addLargeAction(ui->actionCropPages, tr("Crop"), tr("Crops the margins of the selected pages."));
+    pageSetupGroup->addLargeAction(ui->actionProperties, tr("Properties"), tr("Shows the properties of the selected item."));
+    pageSetupGroup->addSmallAction(ui->actionReplaceSelection, tr("Replace"), tr("Replaces the selected pages by the pages from the clipboard."));
+
+    // View
+    PDFRibbonPage* viewPage = ribbon->addPage(tr("View"));
+
+    PDFRibbonGroup* zoomGroup = viewPage->addGroup(tr("Zoom"));
+    zoomGroup->addLargeAction(ui->actionZoom_In, tr("Larger"), tr("Enlarges the previews of the pages."));
+    zoomGroup->addLargeAction(ui->actionZoom_Out, tr("Smaller"), tr("Reduces the previews of the pages."));
+
+    PDFRibbonGroup* showGroup = viewPage->addGroup(tr("Show"));
+    showGroup->addLargeAction(ui->actionShowDetailsView, tr("Details"), tr("Shows the items as a table with details."));
+    showGroup->addLargeAction(ui->actionShow_Document_Title_in_Items, tr("Document Titles"), tr("Shows the titles of the documents instead of the names of the files."));
+
+    PDFRibbonGroup* workspaceGroup = viewPage->addGroup(tr("Work in Progress"));
+    workspaceGroup->addLargeAction(ui->actionSaveWorkspace, tr("Save Work"), tr("Saves the list of the files and pages, to continue later."));
+    workspaceGroup->addLargeAction(ui->actionOpenWorkspace, tr("Open Work"), tr("Opens the saved list of the files and pages."));
+
+    PDFRibbonGroup* helpGroup = viewPage->addGroup(tr("Help"));
+    helpGroup->addLargeAction(ui->actionAbout, tr("About"), tr("Shows the version of the application, the authors and the licenses."));
+    helpGroup->addLargeAction(ui->actionClose, tr("Close"), tr("Closes the window."));
+
+    ribbon->finish();
+    ribbon->setCurrentPage(homePage);
+
+    // The ribbon replaces the menu bar and the toolbars (the menus stay for their shortcuts)
+    QToolBar* ribbonToolBar = new QToolBar(tr("Ribbon"), this);
+    ribbonToolBar->setObjectName("ribbon_toolbar");
+    ribbonToolBar->setMovable(false);
+    ribbonToolBar->setFloatable(false);
+    ribbonToolBar->setContentsMargins(0, 0, 0, 0);
+    ribbonToolBar->layout()->setContentsMargins(0, 0, 0, 0);
+    ribbonToolBar->setStyleSheet("QToolBar#ribbon_toolbar { border: none; padding: 0px; spacing: 0px; }");
+    ribbonToolBar->toggleViewAction()->setVisible(false);
+    ribbonToolBar->addWidget(ribbon);
+    m_ribbonToolBar = ribbonToolBar;
+
+    QList<QToolBar*> classicToolBars = findChildren<QToolBar*>(Qt::FindDirectChildrenOnly);
+    classicToolBars.removeAll(ribbonToolBar);
+    insertToolBar(classicToolBars.isEmpty() ? nullptr : classicToolBars.front(), ribbonToolBar);
+    hideClassicToolBars();
+    menuBar()->hide();
+
+    for (QAction* action : findChildren<QAction*>())
+    {
+        addAction(action);
+    }
+}
+
+void MainWindow::hideClassicToolBars()
+{
+    // The state of the window restored from the settings can show the toolbars again
+    for (QToolBar* toolBar : findChildren<QToolBar*>(Qt::FindDirectChildrenOnly))
+    {
+        if (toolBar != m_ribbonToolBar)
+        {
+            toolBar->hide();
+            toolBar->toggleViewAction()->setVisible(false);
+        }
+    }
+}
+
+QMenu* MainWindow::createPopupMenu()
+{
+    // The menu with the toolbars is not offered, the toolbars are replaced by the ribbon
+    return nullptr;
+}
+
+void MainWindow::updateQualityButton()
+{
+    if (!m_qualityButton)
+    {
+        return;
+    }
+
+    QString name;
+    switch (m_settings.quality)
+    {
+        case QualityOriginal:
+            name = tr("Original");
+            break;
+        case QualityHigh:
+            name = tr("High");
+            break;
+        case QualityMedium:
+            name = tr("Medium");
+            break;
+        case QualityLow:
+            name = tr("Low");
+            break;
+    }
+
+    m_qualityButton->setText(tr("Quality:\n%1").arg(name));
 }
 
 void MainWindow::on_actionClose_triggered()
@@ -1560,6 +1811,7 @@ void MainWindow::loadSettings()
 
     settings.beginGroup("Settings");
     m_settings.directory = settings.value("directory").toString();
+    m_settings.quality = Quality(qBound(int(QualityOriginal), settings.value("quality", int(QualityOriginal)).toInt(), int(QualityLow)));
     settings.endGroup();
 
     settings.beginGroup("Recent");
@@ -1579,6 +1831,7 @@ void MainWindow::saveSettings()
 
     settings.beginGroup("Settings");
     settings.setValue("directory", m_settings.directory);
+    settings.setValue("quality", int(m_settings.quality));
     settings.endGroup();
 
     settings.beginGroup("Recent");
@@ -2461,6 +2714,7 @@ void MainWindow::exportAssembledDocuments(std::vector<std::vector<pdf::PDFDocume
     };
 
     AssembleOutputSettingsDialog dialog(m_settings.directory, this);
+    dialog.setImageOptimization(m_settings.quality != QualityOriginal, getQualitySettings(m_settings.quality));
     dialog.setOutputPreviewFactory([&]()
     {
         std::vector<AssembleOutputSettingsDialog::OutputPreviewItem> previewItems;

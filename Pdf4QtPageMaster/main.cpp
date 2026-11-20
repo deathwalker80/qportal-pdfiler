@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("MelkaJ");
     QCoreApplication::setApplicationName("PDF4QT PageMaster");
     QCoreApplication::setApplicationVersion(QPORTAL_PDFILER_VERSION);
-    QApplication::setApplicationDisplayName(QApplication::translate("Application", "Q-Portal PDFiler PageMaster"));
+    QApplication::setApplicationDisplayName(QApplication::translate("Application", "Q-Portal PDFiler - PDF Tools"));
 
     QCommandLineOption noDrm("no-drm", "Disable DRM settings of documents.");
     QCommandLineOption lightGui("theme-light", "Use a light theme for the GUI.");

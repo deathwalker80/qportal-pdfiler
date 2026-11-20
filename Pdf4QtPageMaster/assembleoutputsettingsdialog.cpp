@@ -226,6 +226,13 @@ pdf::PDFDocumentManipulator::OutlineMode AssembleOutputSettingsDialog::getOutlin
     return pdf::PDFDocumentManipulator::OutlineMode(ui->outlineModeComboBox->currentData().toInt());
 }
 
+void AssembleOutputSettingsDialog::setImageOptimization(bool enabled, const pdf::PDFImageOptimizer::Settings& settings)
+{
+    m_imageOptimizationSettings = settings;
+    m_imageOptimizationSettings.enabled = true;
+    ui->optimizeImagesCheckBox->setChecked(enabled);
+}
+
 bool AssembleOutputSettingsDialog::isImageOptimizationEnabled() const
 {
     return ui->optimizeImagesCheckBox->isChecked();

@@ -48,6 +48,7 @@
 #include "pdfwidgetutils.h"
 #include "pdfactioncombobox.h"
 #include "pdfeditorribbon.h"
+#include "pdfwelcomepage.h"
 
 #include <QPainter>
 #include <QSettings>
@@ -267,6 +268,9 @@ PDFViewerMainWindow::PDFViewerMainWindow(QWidget* parent) :
     m_actionManager->styleActions();
     m_programController->initActionComboBox(actionComboBox);
 
+    // Start page is displayed, while no document is opened; it provides actions for the ribbon
+    m_welcomePage = new PDFWelcomePage(this, m_actionManager, m_programController, false, m_programController->getPdfWidget());
+
     // Ribbon as in the editor, the commands of the editing are not in the viewer
     PDFEditorRibbon* ribbon = new PDFEditorRibbon(this, m_actionManager, m_programController, m_sidebarDockWidget->toggleViewAction(),
                                                   nullptr, nullptr, actionComboBox);
@@ -422,6 +426,11 @@ void PDFViewerMainWindow::setStatusBarMessage(QString message, int time)
 
 void PDFViewerMainWindow::setDocument(const pdf::PDFModifiedDocument& document)
 {
+    if (m_welcomePage)
+    {
+        m_welcomePage->setVisible(!document);
+    }
+
     if (m_sidebarWidget)
     {
         m_sidebarWidget->setDocument(document, *m_programController->getSignatures());

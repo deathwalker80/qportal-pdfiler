@@ -26,6 +26,7 @@
 #include "pdficontheme.h"
 #include "pdfpagegeometry.h"
 #include "pdfprogress.h"
+#include "pdfimageoptimizer.h"
 
 #include "pageitemmodel.h"
 #include "pageitemdelegate.h"
@@ -53,6 +54,8 @@ class QMenu;
 class QMimeData;
 class QProgressBar;
 class QTableView;
+class QToolBar;
+class QToolButton;
 
 namespace pdf
 {
@@ -88,6 +91,7 @@ public:
     void showAddFilesDialog() { on_actionAddDocuments_triggered(); }
 
     virtual void dragEnterEvent(QDragEnterEvent* event) override;
+    virtual QMenu* createPopupMenu() override;
     virtual void dropEvent(QDropEvent* event) override;
 
     QSize getMinPageImageSize() const;
@@ -237,8 +241,24 @@ private:
     void setExportInProgress(bool inProgress);
     void hideExportProgress();
 
+    /// Quality of the images in the created documents
+    enum Quality
+    {
+        QualityOriginal,    ///< Images are not changed
+        QualityHigh,
+        QualityMedium,
+        QualityLow
+    };
+
+    static pdf::PDFImageOptimizer::Settings getQualitySettings(Quality quality);
+
+    void createRibbon();
+    void hideClassicToolBars();
+    void updateQualityButton();
+
     struct Settings
     {
+        Quality quality = QualityOriginal;
         QString directory;
         QStringList recentSourceFiles;
         QStringList recentWorkspaceFiles;
@@ -267,6 +287,8 @@ private:
     QSignalMapper m_mapper;
     Qt::DropAction m_dropAction;
     bool m_isExporting = false;
+    QToolBar* m_ribbonToolBar = nullptr;
+    QToolButton* m_qualityButton = nullptr;
     bool m_wasEnabledBeforeExport = true;
     bool m_isChangingExportProgressStep = false;
     bool m_hasPageGeometrySettings = false;

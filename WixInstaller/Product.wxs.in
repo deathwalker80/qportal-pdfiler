@@ -30,7 +30,7 @@
         <ComponentGroupRef Id="PDF4QT_Viewer"/>
       </Feature>
 
-      <Feature Id="feature_PDF4QT_PageMaster" Absent="allow" AllowAdvertise="no" Title="Organizza pagine" Level="1" Description="Unisci e dividi documenti, inserisci, elimina, sposta, duplica e ruota pagine, aggiungi pagine bianche e immagini.">
+      <Feature Id="feature_PDF4QT_PageMaster" Absent="allow" AllowAdvertise="no" Title="Strumenti PDF" Level="1" Description="Unisci e dividi documenti, inserisci, elimina, sposta, duplica e ruota pagine, aggiungi pagine bianche e immagini.">
         <ComponentGroupRef Id="PDF4QT_PageMaster"/>
       </Feature>
 
@@ -314,7 +314,7 @@ ${PDF4QT_WIX_OCR_COMPONENTS}<?endif?>
     <ComponentGroup Id="PDF4QT_PageMaster">
       <Component Id="cmpPdf4QtPageMaster" Directory="INSTALLFOLDER" Guid="{9D248BEE-BA78-4050-B362-0694B11AA326}">
         <File Id="filPdf4QtPageMaster" KeyPath="yes" Source="$(var.MyInstallDir)\Pdf4QtPageMaster.exe">
-          <Shortcut Id="PDF4QT_DPO_Shortcut" Directory="ProgramMenuDir" Name="Q-Portal PDFiler - Organizza pagine" Description="Unisci, dividi e riordina le pagine dei PDF" WorkingDirectory="INSTALLFOLDER" Icon="PDF4QT_DPO_Icon.exe" IconIndex="0" Advertise="yes"/>
+          <Shortcut Id="PDF4QT_DPO_Shortcut" Directory="ProgramMenuDir" Name="Q-Portal PDFiler - Strumenti PDF" Description="Crea, unisci, dividi e riordina i PDF" WorkingDirectory="INSTALLFOLDER" Icon="PDF4QT_DPO_Icon.exe" IconIndex="0" Advertise="yes"/>
         </File>
       </Component>
     </ComponentGroup>

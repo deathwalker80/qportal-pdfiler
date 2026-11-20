@@ -65,6 +65,10 @@ public:
     pdf::PDFDocumentManipulator::OutlineMode getOutlineMode() const;
     bool isImageOptimizationEnabled() const;
     pdf::PDFImageOptimizer::Settings getImageOptimizationSettings() const;
+
+    /// Sets the optimization of the images (the quality chosen in the main window),
+    /// it replaces the optimization settings stored from the last use of the dialog
+    void setImageOptimization(bool enabled, const pdf::PDFImageOptimizer::Settings& settings);
     void setOutputPreview(const std::vector<OutputPreviewItem>& items);
     void setOutputPreviewFactory(std::function<std::vector<OutputPreviewItem>()> factory);
 
