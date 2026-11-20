@@ -584,7 +584,7 @@
         <message>
             <location line="+9" />
             <source>Clone &amp;Selection</source>
-            <translation>Du&amp;plica selezione</translation>
+            <translation>Dup&amp;lica selezione</translation>
         </message>
         <message>
             <location line="+3" />
@@ -679,7 +679,7 @@
         <message>
             <location line="+9" />
             <source>Repl&amp;ace Selection</source>
-            <translation>Sostit&amp;uisci selezione</translation>
+            <translation>Sostituisc&amp;i selezione</translation>
         </message>
         <message>
             <location line="+3" />
@@ -719,7 +719,7 @@
         <message>
             <location line="+9" />
             <source>Select &amp;Odd</source>
-            <translation>Seleziona pagine &amp;dispari</translation>
+            <translation>&amp;Seleziona pagine dispari</translation>
         </message>
         <message>
             <location line="+3" />
@@ -779,7 +779,7 @@
         <message>
             <location line="+9" />
             <source>&amp;Zoom In</source>
-            <translation>&amp;Ingrandisci</translation>
+            <translation>I&amp;ngrandisci</translation>
         </message>
         <message>
             <location line="+3" />
@@ -849,7 +849,7 @@
         <message>
             <location line="+9" />
             <source>&amp;Group</source>
-            <translation>Ra&amp;ggruppa</translation>
+            <translation>Raggr&amp;uppa</translation>
         </message>
         <message>
             <location line="+3" />
@@ -884,7 +884,7 @@
         <message>
             <location line="+9" />
             <source>Regroup by Re&amp;verse</source>
-            <translation>Raggruppa in ordine &amp;inverso</translation>
+            <translation>&amp;Raggruppa in ordine inverso</translation>
         </message>
         <message>
             <location line="+9" />
@@ -1136,12 +1136,12 @@
         <message>
             <location line="+12" />
             <source>View &amp;Right</source>
-            <translation>Visualizza &amp;destro</translation>
+            <translation>&amp;Visualizza destro</translation>
         </message>
         <message>
             <location line="+12" />
             <source>View &amp;Overlay</source>
-            <translation>Visualizza &amp;sovrapposizione</translation>
+            <translation>V&amp;isualizza sovrapposizione</translation>
         </message>
         <message>
             <location line="+12" />
@@ -1171,7 +1171,7 @@
         <message>
             <location line="+12" />
             <source>Display &amp;Markers</source>
-            <translation>Mostra &amp;marcatori</translation>
+            <translation>M&amp;ostra marcatori</translation>
         </message>
     </context>
     <context>
@@ -1649,7 +1649,7 @@
         <message>
             <location line="+20" />
             <source>&amp;View</source>
-            <translation>&amp;Visualizza</translation>
+            <translation>Vi&amp;sualizza</translation>
         </message>
         <message>
             <location line="+4" />
@@ -1675,7 +1675,7 @@
         <message>
             <location line="-689" />
             <source>&amp;Developer</source>
-            <translation>S&amp;viluppatore</translation>
+            <translation>Svi&amp;luppatore</translation>
         </message>
         <message>
             <location line="+7" />
@@ -1771,7 +1771,7 @@
         <message>
             <location line="+8" />
             <source>&amp;Two columns</source>
-            <translation>Due &amp;colonne</translation>
+            <translation>&amp;Due colonne</translation>
         </message>
         <message>
             <location line="+3" />
@@ -1786,7 +1786,7 @@
         <message>
             <location line="+8" />
             <source>&amp;First page on right side</source>
-            <translation>&amp;Prima pagina a destra</translation>
+            <translation>Prima pagina &amp;a destra</translation>
         </message>
         <message>
             <location line="+3" />
@@ -1921,7 +1921,7 @@
         <message>
             <location line="+9" />
             <source>Send by &amp;E-Mail...</source>
-            <translation>Invia per &amp;e-mail...</translation>
+            <translation>In&amp;via per e-mail...</translation>
         </message>
         <message>
             <location line="+8" />
@@ -1936,7 +1936,7 @@
         <message>
             <location line="+9" />
             <source>&amp;Find</source>
-            <translation>&amp;Trova</translation>
+            <translation>Tro&amp;va</translation>
         </message>
         <message>
             <location line="+9" />
@@ -1956,12 +1956,12 @@
         <message>
             <location line="+12" />
             <source>Select &amp;table</source>
-            <translation>Seleziona &amp;tabella</translation>
+            <translation>Sele&amp;ziona tabella</translation>
         </message>
         <message>
             <location line="+9" />
             <source>Select &amp;All</source>
-            <translation>Seleziona &amp;tutto</translation>
+            <translation>S&amp;eleziona tutto</translation>
         </message>
         <message>
             <location line="+9" />
@@ -1976,7 +1976,7 @@
         <message>
             <location line="+12" />
             <source>Color | &amp;Inverted</source>
-            <translation>Colore | &amp;Invertito</translation>
+            <translation>C&amp;olore | Invertito</translation>
         </message>
         <message>
             <location line="+12" />
@@ -1996,7 +1996,7 @@
         <message>
             <location line="+12" />
             <source>Color | &amp;Custom</source>
-            <translation>Colore | &amp;Personalizzato</translation>
+            <translation>Color&amp;e | Personalizzato</translation>
         </message>
         <message>
             <location line="+9" />
@@ -2006,12 +2006,12 @@
         <message>
             <location line="+9" />
             <source>Rotate &amp;Left</source>
-            <translation>Ruota a &amp;sinistra</translation>
+            <translation>&amp;Ruota a sinistra</translation>
         </message>
         <message>
             <location line="+9" />
             <source>&amp;Print...</source>
-            <translation>&amp;Stampa...</translation>
+            <translation>S&amp;tampa...</translation>
         </message>
         <message>
             <location line="+5" />
@@ -2081,7 +2081,7 @@
         <message>
             <location line="+9" />
             <source>Save &amp;As...</source>
-            <translation>Salva &amp;con nome...</translation>
+            <translation>Salva con &amp;nome...</translation>
         </message>
         <message>
             <location line="+9" />
@@ -2096,7 +2096,7 @@
         <message>
             <location line="+24" />
             <source>&amp;Key</source>
-            <translation>&amp;Chiave</translation>
+            <translation>C&amp;hiave</translation>
         </message>
         <message>
             <location line="+8" />
@@ -2171,7 +2171,7 @@
         <message>
             <location line="+12" />
             <source>Insert Page &amp;Numbers...</source>
-            <translation>Inserisci &amp;numeri di pagina...</translation>
+            <translation>In&amp;serisci numeri di pagina...</translation>
         </message>
         <message>
             <location line="+12" />
@@ -2181,7 +2181,7 @@
         <message>
             <location line="+12" />
             <source>Pol&amp;yline</source>
-            <translation>Poli&amp;linea</translation>
+            <translation>P&amp;olilinea</translation>
         </message>
         <message>
             <location line="+12" />
@@ -2196,7 +2196,7 @@
         <message>
             <location line="+12" />
             <source>&amp;Ellipse</source>
-            <translation>E&amp;llisse</translation>
+            <translation>Ell&amp;isse</translation>
         </message>
         <message>
             <location line="+12" />
@@ -2206,7 +2206,7 @@
         <message>
             <location line="+8" />
             <source>&amp;Delete Annotations</source>
-            <translation>&amp;Elimina annotazioni</translation>
+            <translation>Elimina &amp;annotazioni</translation>
         </message>
         <message>
             <location line="+3" />
@@ -2271,7 +2271,7 @@
         <message>
             <location line="+9" />
             <source>&amp;Encryption...</source>
-            <translation>&amp;Cifratura...</translation>
+            <translation>Ci&amp;fratura...</translation>
         </message>
         <message>
             <location line="+9" />
@@ -2281,7 +2281,7 @@
         <message>
             <location line="+9" />
             <source>&amp;Sanitize...</source>
-            <translation>&amp;Pulisci documento...</translation>
+            <translation>Pulisci &amp;documento...</translation>
         </message>
         <message>
             <location line="+3" />
@@ -2291,7 +2291,7 @@
         <message>
             <location line="+5" />
             <source>Remove External &amp;Links</source>
-            <translation>Rimuovi &amp;collegamenti esterni</translation>
+            <translation>Ri&amp;muovi collegamenti esterni</translation>
         </message>
         <message>
             <location line="+3" />
@@ -2356,7 +2356,7 @@
         <message>
             <location line="+5" />
             <source>&amp;Prepare Scanned Pages...</source>
-            <translation>&amp;Prepara pagine scansionate...</translation>
+            <translation>Prepara pagi&amp;ne scansionate...</translation>
         </message>
         <message>
             <location line="+3" />
@@ -2371,7 +2371,7 @@
         <message>
             <location line="+5" />
             <source>&amp;Batch Recognize Text...</source>
-            <translation>Riconoscimento testo in &amp;blocco...</translation>
+            <translation>Riconoscimento testo in se&amp;quenza...</translation>
         </message>
         <message>
             <location line="+3" />
@@ -2386,7 +2386,7 @@
         <message>
             <location line="+5" />
             <source>Manage OCR &amp;Languages...</source>
-            <translation>Gestisci &amp;lingue OCR...</translation>
+            <translation>Pacc&amp;hetti lingua OCR...</translation>
         </message>
         <message>
             <location line="+3" />
@@ -2491,7 +2491,7 @@
         <message>
             <location line="+8" />
             <source>Display &amp;Render Times</source>
-            <translation>Mostra &amp;tempi di rendering</translation>
+            <translation>Mostra tempi &amp;di rendering</translation>
         </message>
         <message>
             <location line="+3" />
@@ -2501,7 +2501,7 @@
         <message>
             <location line="+8" />
             <source>Clear Recent File &amp;History</source>
-            <translation>Cancella &amp;cronologia file recenti</translation>
+            <translation>Cancella cronologia &amp;file recenti</translation>
         </message>
     </context>
     <context>
@@ -7919,7 +7919,7 @@ Usa l'opzione '--accept-download' per confermare il download.</translation>
         <message>
             <location line="+15" />
             <source>&amp;View</source>
-            <translation>&amp;Visualizza</translation>
+            <translation>V&amp;isualizza</translation>
         </message>
         <message>
             <location line="+4" />
@@ -7954,7 +7954,7 @@ Usa l'opzione '--accept-download' per confermare il download.</translation>
         <message>
             <location line="+9" />
             <source>&amp;Quit</source>
-            <translation>&amp;Esci</translation>
+            <translation>Esc&amp;i</translation>
         </message>
         <message>
             <location line="+8" />
@@ -7989,7 +7989,7 @@ Usa l'opzione '--accept-download' per confermare il download.</translation>
         <message>
             <location line="+8" />
             <source>&amp;Two columns</source>
-            <translation>Due &amp;colonne</translation>
+            <translation>&amp;Due colonne</translation>
         </message>
         <message>
             <location line="+3" />
@@ -7999,7 +7999,7 @@ Usa l'opzione '--accept-download' per confermare il download.</translation>
         <message>
             <location line="+8" />
             <source>&amp;First page on right side</source>
-            <translation>&amp;Prima pagina a destra</translation>
+            <translation>Prima pagina &amp;a destra</translation>
         </message>
         <message>
             <location line="+3" />
@@ -8114,12 +8114,12 @@ Usa l'opzione '--accept-download' per confermare il download.</translation>
         <message>
             <location line="+9" />
             <source>Send by &amp;E-Mail...</source>
-            <translation>Invia per &amp;e-mail...</translation>
+            <translation>In&amp;via per e-mail...</translation>
         </message>
         <message>
             <location line="+12" />
             <source>Color | &amp;Inverted</source>
-            <translation>Colore | &amp;Invertito</translation>
+            <translation>C&amp;olore | Invertito</translation>
         </message>
         <message>
             <location line="+12" />
@@ -8139,7 +8139,7 @@ Usa l'opzione '--accept-download' per confermare il download.</translation>
         <message>
             <location line="+12" />
             <source>Color | &amp;Custom</source>
-            <translation>Colore | &amp;Personalizzato</translation>
+            <translation>Color&amp;e | Personalizzato</translation>
         </message>
         <message>
             <location line="+9" />
@@ -8149,7 +8149,7 @@ Usa l'opzione '--accept-download' per confermare il download.</translation>
         <message>
             <location line="+9" />
             <source>Rotate &amp;Left</source>
-            <translation>Ruota a &amp;sinistra</translation>
+            <translation>&amp;Ruota a sinistra</translation>
         </message>
         <message>
             <location line="+9" />
@@ -8164,7 +8164,7 @@ Usa l'opzione '--accept-download' per confermare il download.</translation>
         <message>
             <location line="+9" />
             <source>&amp;Find</source>
-            <translation>&amp;Trova</translation>
+            <translation>Tro&amp;va</translation>
         </message>
         <message>
             <location line="+9" />
@@ -8184,12 +8184,12 @@ Usa l'opzione '--accept-download' per confermare il download.</translation>
         <message>
             <location line="+12" />
             <source>Select &amp;table</source>
-            <translation>Seleziona &amp;tabella</translation>
+            <translation>Sele&amp;ziona tabella</translation>
         </message>
         <message>
             <location line="+9" />
             <source>Select &amp;All</source>
-            <translation>Seleziona &amp;tutto</translation>
+            <translation>S&amp;eleziona tutto</translation>
         </message>
         <message>
             <location line="+9" />
@@ -8359,12 +8359,12 @@ Usa l'opzione '--accept-download' per confermare il download.</translation>
         <message>
             <location line="+8" />
             <source>Display &amp;Render Times</source>
-            <translation>Mostra &amp;tempi di rendering</translation>
+            <translation>Mostra tempi &amp;di rendering</translation>
         </message>
         <message>
             <location line="+8" />
             <source>Clear Recent File &amp;History</source>
-            <translation>Cancella &amp;cronologia file recenti</translation>
+            <translation>Cancella cronologia &amp;file recenti</translation>
         </message>
     </context>
     <context>
