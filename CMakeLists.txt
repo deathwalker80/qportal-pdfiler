@@ -23,6 +23,8 @@
 cmake_minimum_required(VERSION 3.16)
 
 set(PDF4QT_VERSION 1.7.1.0)
+# Q-Portal PDFiler: product version (MSI, About dialog, --version). PDF4QT_VERSION stays the upstream engine version.
+set(QPORTAL_PDFILER_VERSION 1.0.0.0)
 message(STATUS "Build type - CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
 project(PDF4QT VERSION ${PDF4QT_VERSION} LANGUAGES CXX)
@@ -35,6 +37,7 @@ option(PDF4QT_INSTALL_INCLUDE "Install include headers" ON)
 option(PDF4QT_FLATPAK_BUILD "Special flag for Flatpak" OFF)
 
 add_compile_definitions(PDF4QT_PROJECT_VERSION="${PDF4QT_VERSION}")
+add_compile_definitions(QPORTAL_PDFILER_VERSION="${QPORTAL_PDFILER_VERSION}")
 add_compile_definitions(QT_NO_EMIT)
 
 if(PDF4QT_FLATPAK_BUILD)
@@ -75,7 +78,7 @@ if(PDF4QT_BUILD_TESTS)
     find_package(Qt6 REQUIRED COMPONENTS Test)
 endif()
 
-qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES en de cs es ko zh_CN zh_TW fr tr ru)
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES en de cs es ko zh_CN zh_TW fr tr ru it)
 
 find_package(OpenSSL 3.0 REQUIRED)
 find_package(ZLIB REQUIRED)

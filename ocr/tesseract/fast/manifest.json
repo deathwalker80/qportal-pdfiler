@@ -104,6 +104,18 @@
    "source": "https://github.com/tesseract-ocr/tessdata_fast"
   },
   {
+   "id": "tesseract/fast/ita",
+   "language": "ita",
+   "name": "Italian",
+   "profile": "fast",
+   "fileName": "ita.traineddata",
+   "size": 2701314,
+   "sha256": "b8f89e1e785118dac4d51ae042c029a64edb5c3ee42ef73027a6d412748d8827",
+   "version": "87416418657359cb625c412a48b6e1d6d41c29bd",
+   "license": "Apache-2.0",
+   "source": "https://github.com/tesseract-ocr/tessdata_fast"
+  },
+  {
    "id": "tesseract/fast/osd",
    "language": "osd",
    "name": "Orientation and script detection",

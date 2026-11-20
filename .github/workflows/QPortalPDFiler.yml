@@ -1,0 +1,242 @@
+name: Q-Portal PDFiler - Windows MSI
+
+# Builds the Windows x64 MSI installer and the portable ZIP of Q-Portal PDFiler.
+# Started manually (Actions > Run workflow) or by pushing a tag v*, which also creates a draft release.
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+env:
+  QT_VERSION: '6.11.3'
+  QT_MODULES: 'qtspeech qtmultimedia qtimageformats'
+  # aqtinstall 3.3 cannot read the Windows repository layout of Qt 6.11+, a commit of its master is used
+  AQT_SOURCE: 'git+https://github.com/miurahr/aqtinstall.git@076e1659807d0b362a3ed684d54c2e9c775eb9c7'
+  VCPKG_TRIPLET: x64-windows-release
+
+jobs:
+  build_windows:
+    # The image contains Visual Studio 2022 (redistributables of MSVC) and WiX Toolset v3
+    runs-on: windows-2022
+    timeout-minutes: 180
+    permissions:
+      contents: write
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          path: pdf4qt
+
+      - name: Set up paths
+        run: |
+          workspace="$(cygpath -m "$GITHUB_WORKSPACE")"
+          {
+            echo "VCPKG_ROOT=$workspace/vcpkg"
+            echo "VCPKG_INSTALLED_DIR=$workspace/vcpkg_installed"
+            echo "VCPKG_DEFAULT_BINARY_CACHE=$workspace/vcpkg-binary-cache"
+            echo "VCPKG_DISABLE_METRICS=1"
+          } >> "$GITHUB_ENV"
+
+      - name: 'VCPKG: Set up VCPKG'
+        run: |
+          baseline="$(sed -n 's/.*"builtin-baseline": *"\([0-9a-f]*\)".*/\1/p' pdf4qt/vcpkg.json)"
+          git init -q vcpkg
+          git -C vcpkg remote add origin https://github.com/microsoft/vcpkg.git
+          git -C vcpkg fetch -q --depth=1 origin "$baseline"
+          git -C vcpkg checkout -q --detach FETCH_HEAD
+          ./vcpkg/bootstrap-vcpkg.bat -disableMetrics
+
+      - name: 'VCPKG: Restore binary cache'
+        uses: actions/cache/restore@v6
+        with:
+          path: vcpkg-binary-cache
+          key: qpdfiler-vcpkg-bin-v1-${{ env.VCPKG_TRIPLET }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            qpdfiler-vcpkg-bin-v1-${{ env.VCPKG_TRIPLET }}-
+
+      - name: 'VCPKG: Install project dependencies'
+        run: |
+          mkdir -p vcpkg-binary-cache
+          ./vcpkg/vcpkg install --x-manifest-root=pdf4qt --x-install-root="$VCPKG_INSTALLED_DIR" --triplet=$VCPKG_TRIPLET --host-triplet=$VCPKG_TRIPLET --clean-buildtrees-after-build --clean-packages-after-build
+
+      - name: 'VCPKG: Save binary cache'
+        uses: actions/cache/save@v6
+        with:
+          path: vcpkg-binary-cache
+          key: qpdfiler-vcpkg-bin-v1-${{ env.VCPKG_TRIPLET }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: 'Qt: Cache key'
+        id: qt-key
+        run: |
+          hash="$(printf '%s\n' "$QT_VERSION" "windows" "win64_msvc2022_64" "$QT_MODULES" "$AQT_SOURCE" | sha256sum | cut -c1-16)"
+          echo "key=$RUNNER_OS-qt-$QT_VERSION-$hash" >> "$GITHUB_OUTPUT"
+
+      - name: 'Qt: Restore cache'
+        id: qt-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: qt
+          key: ${{ steps.qt-key.outputs.key }}
+
+      - name: 'Qt: Install'
+        if: steps.qt-cache.outputs.cache-hit != 'true'
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2022_64'
+          dir: '${{ github.workspace }}/qt/'
+          modules: ${{ env.QT_MODULES }}
+          aqtsource: ${{ env.AQT_SOURCE }}
+          cache: 'false'
+          set-env: 'false'
+
+      - name: 'Qt: Save cache'
+        if: steps.qt-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: qt
+          key: ${{ steps.qt-key.outputs.key }}
+
+      - name: 'Qt: Set up environment'
+        run: |
+          qt_root="$(cygpath -m "$GITHUB_WORKSPACE")/qt/Qt/$QT_VERSION/msvc2022_64"
+          if [ ! -d "$qt_root/bin" ]; then echo "::error::Qt not found in $qt_root"; exit 1; fi
+          {
+            echo "QT_ROOT_DIR=$qt_root"
+            echo "QT_PLUGIN_PATH=$qt_root/plugins"
+            echo "QML2_IMPORT_PATH=$qt_root/qml"
+          } >> "$GITHUB_ENV"
+          echo "$qt_root/bin" >> "$GITHUB_PATH"
+
+      - name: Find VC Redistributable Directories
+        shell: pwsh
+        run: |
+          $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
+          $version = (Get-Content "$vs\VC\Auxiliary\Build\Microsoft.VCRedistVersion.default.txt" -Raw).Trim()
+          $arch = "x64"
+          $redistDir = Get-ChildItem "$vs\VC\Redist\MSVC\$version\$arch" -Directory -Filter "Microsoft.VC*.CRT" | Select-Object -First 1
+          if (-not $redistDir) {
+            Write-Error "No redistributable of MSVC $version found."
+            exit 1
+          }
+          $toolsetVersion = $redistDir.Name -replace '^Microsoft\.VC(\d+)\.CRT$', '$1'
+          Write-Host "Found MSVC Redistributable $version, toolset $toolsetVersion, $($redistDir.FullName)"
+          echo "MSVC_TOOLSET_VERSION=$toolsetVersion" >> $env:GITHUB_ENV
+          echo "VCToolsRedistDir=$vs\VC\Redist\MSVC\$version" >> $env:GITHUB_ENV
+          echo "VSCMD_ARG_TGT_ARCH=$arch" >> $env:GITHUB_ENV
+          echo "MSVC_REDISTRIBUTABLES_PATH=$($redistDir.FullName)" >> $env:GITHUB_ENV
+
+      - name: Build project
+        working-directory: pdf4qt
+        run: |
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=$VCPKG_TRIPLET -DVCPKG_HOST_TRIPLET=$VCPKG_TRIPLET -DVCPKG_INSTALLED_DIR="$VCPKG_INSTALLED_DIR" -DVCPKG_MANIFEST_INSTALL=OFF -DPDF4QT_INSTALL_QT_DEPENDENCIES=ON -DPDF4QT_INSTALL_DEPENDENCIES=ON -DPDF4QT_QT_ROOT="$QT_ROOT_DIR" -DPDF4QT_INSTALL_MSVC_REDISTRIBUTABLE=ON -DPDF4QT_INSTALL_PREPARE_WIX_INSTALLER=ON -DPDF4QT_INSTALL_TO_USR=ON -DPDF4QT_OCR_REQUIRED=ON
+          cmake --build build --target release_translations --config Release -j6
+          cmake --build build --config Release -j6
+          cmake --install build --config Release
+
+      - name: Check release build
+        shell: pwsh
+        run: |
+          $bin = "pdf4qt\build\install\usr\bin"
+          $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
+          $dumpbin = Get-ChildItem "$vs\VC\Tools\MSVC\*\bin\Hostx64\x64\dumpbin.exe" | Select-Object -First 1
+          foreach ($binary in @("Pdf4QtLibCore.dll", "Pdf4QtLibGui.dll", "Pdf4QtEditor.exe", "Pdf4QtViewer.exe")) {
+            $dependents = & $dumpbin.FullName /dependents "$bin\$binary" | Out-String
+            if ($LASTEXITCODE -ne 0) { Write-Error "dumpbin failed for $binary"; exit 1 }
+            if ($dependents -match '(?i)\b(VCRUNTIME140D|VCRUNTIME140_1D|MSVCP140D|UCRTBASED)\.dll') {
+              Write-Error "$binary is a debug build"
+              exit 1
+            }
+          }
+          if (-not (Test-Path "$bin\tls\qschannelbackend.dll")) { Write-Error "TLS backend of Qt missing"; exit 1 }
+          if (-not (Test-Path "$bin\translations\PDF4QT_it.qm")) { Write-Error "Italian translation PDF4QT_it.qm missing"; exit 1 }
+          $qm = (Get-Item "$bin\translations\PDF4QT_it.qm").Length
+          Write-Host "PDF4QT_it.qm: $qm bytes"
+          Write-Host "Release binaries confirmed"
+
+      - name: Read version
+        shell: pwsh
+        run: |
+          $match = Select-String -Path ".\pdf4qt\CMakeLists.txt" -Pattern 'set\(QPORTAL_PDFILER_VERSION ([0-9.]+)\)'
+          $version = $match.Matches[0].Groups[1].Value
+          if (-not $version) { Write-Error "QPORTAL_PDFILER_VERSION not found"; exit 1 }
+          Write-Host "Q-Portal PDFiler version: $version"
+          echo "pdfiler_version=$version" >> $env:GITHUB_ENV
+          echo "msipackagefilename=Q-Portal-PDFiler_${version}_x64.msi" >> $env:GITHUB_ENV
+          echo "zipfilename=Q-Portal-PDFiler_${version}_x64_portable.zip" >> $env:GITHUB_ENV
+
+      - name: Find WiXUIExtension.dll
+        shell: pwsh
+        run: |
+          $wixUIExtensionPath = Get-ChildItem -Path "C:\Program Files (x86)\WiX Toolset v3.*\bin\WiXUIExtension.dll" -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($null -eq $wixUIExtensionPath) { Write-Error "WiXUIExtension.dll not found"; exit 1 }
+          echo "wixuiextpath=$($wixUIExtensionPath.FullName)" >> $env:GITHUB_ENV
+
+      - name: Create MSI Package
+        working-directory: pdf4qt\build\WixInstaller
+        shell: pwsh
+        run: |
+          candle -v -d"Configuration=Release" -d"Platform=x64" -out obj\Release\ -arch x64 -ext "${{ env.wixuiextpath }}" Product.wxs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          light -v -out "${{ github.workspace }}\pdf4qt\build\install\${{ env.msipackagefilename }}" -pdbout .\bin\Release\PDFiler.wixpdb -cultures:it-IT -ext "${{ env.wixuiextpath }}" obj\Release\Product.wixobj
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Create ZIP archive
+        shell: pwsh
+        working-directory: pdf4qt\build\install\usr\bin
+        run: |
+          7z a -tzip -mx=9 "..\..\${{ env.zipfilename }}" *
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: SHA-256 checksums
+        shell: pwsh
+        working-directory: pdf4qt\build\install
+        run: |
+          Get-FileHash "${{ env.msipackagefilename }}", "${{ env.zipfilename }}" -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $(Split-Path $_.Path -Leaf)" } | Set-Content -Encoding ascii SHA256SUMS.txt
+          Get-Content SHA256SUMS.txt
+
+      - name: Upload MSI package
+        uses: actions/upload-artifact@v7
+        with:
+          name: '${{ env.msipackagefilename }}'
+          path: .\pdf4qt\build\install\${{ env.msipackagefilename }}
+          retention-days: 30
+          compression-level: 0
+
+      - name: Upload ZIP archive
+        uses: actions/upload-artifact@v7
+        with:
+          name: '${{ env.zipfilename }}'
+          path: .\pdf4qt\build\install\${{ env.zipfilename }}
+          retention-days: 30
+          compression-level: 0
+
+      - name: Upload checksums
+        uses: actions/upload-artifact@v7
+        with:
+          name: SHA256SUMS
+          path: .\pdf4qt\build\install\SHA256SUMS.txt
+          retention-days: 30
+
+      - name: Draft release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          name: 'Q-Portal PDFiler ${{ env.pdfiler_version }}'
+          files: |
+            pdf4qt/build/install/${{ env.msipackagefilename }}
+            pdf4qt/build/install/${{ env.zipfilename }}
+            pdf4qt/build/install/SHA256SUMS.txt

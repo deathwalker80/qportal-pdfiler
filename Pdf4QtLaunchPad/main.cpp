@@ -39,14 +39,14 @@ int main(int argc, char *argv[])
 
     QCoreApplication::setOrganizationName("MelkaJ");
     QCoreApplication::setApplicationName("PDF4QT LaunchPad");
-    QApplication::setApplicationDisplayName(QApplication::translate("Application", "PDF4QT LaunchPad"));
+    QApplication::setApplicationDisplayName(QApplication::translate("Application", "Q-Portal PDFiler"));
 
     QCommandLineParser parser;
     QCommandLineOption configPath = pdf::PDFSettings::getConfigPathOption();
     parser.setApplicationDescription(QCoreApplication::applicationName());
     parser.addOption(configPath);
     parser.addHelpOption();
-    parser.addPositionalArgument("file", "The PDF file to open in PDF4QT Viewer.");
+    parser.addPositionalArgument("file", "The PDF file to open in Q-Portal PDFiler Viewer.");
     parser.process(application);
     pdf::PDFSettings::applyCommandLineSettingsPath(parser);
 
