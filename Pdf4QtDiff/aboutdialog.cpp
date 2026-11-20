@@ -36,7 +36,7 @@ PDFAboutDialog::PDFAboutDialog(QWidget* parent) :
     ui->setupUi(this);
 
     QString html = ui->copyrightLabel->text();
-    html.replace("PdfForQtViewer", QString("%1 %2").arg(QApplication::applicationDisplayName(), QApplication::applicationVersion()));
+    html.replace("PdfForQtViewer", QString("%1 %2 &nbsp;%3 DeathWalkeR").arg(QApplication::applicationDisplayName(), QApplication::applicationVersion(), QString(QChar(0x00A9))));
     ui->copyrightLabel->setText(html);
 
     std::vector<pdf::PDFDependentLibraryInfo> infos = pdf::PDFDependentLibraryInfo::getLibraryInfo();

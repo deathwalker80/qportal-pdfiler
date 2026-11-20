@@ -141,7 +141,7 @@ jobs:
       - name: Build project
         working-directory: pdf4qt
         run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=$VCPKG_TRIPLET -DVCPKG_HOST_TRIPLET=$VCPKG_TRIPLET -DVCPKG_INSTALLED_DIR="$VCPKG_INSTALLED_DIR" -DVCPKG_MANIFEST_INSTALL=OFF -DPDF4QT_INSTALL_QT_DEPENDENCIES=ON -DPDF4QT_INSTALL_DEPENDENCIES=ON -DPDF4QT_QT_ROOT="$QT_ROOT_DIR" -DPDF4QT_INSTALL_MSVC_REDISTRIBUTABLE=ON -DPDF4QT_INSTALL_PREPARE_WIX_INSTALLER=ON -DPDF4QT_INSTALL_TO_USR=ON -DPDF4QT_OCR_REQUIRED=ON
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=$VCPKG_TRIPLET -DVCPKG_HOST_TRIPLET=$VCPKG_TRIPLET -DVCPKG_INSTALLED_DIR="$VCPKG_INSTALLED_DIR" -DVCPKG_MANIFEST_INSTALL=OFF -DPDF4QT_INSTALL_QT_DEPENDENCIES=ON -DPDF4QT_INSTALL_DEPENDENCIES=ON -DPDF4QT_QT_ROOT="$QT_ROOT_DIR" -DPDF4QT_INSTALL_MSVC_REDISTRIBUTABLE=ON -DPDF4QT_INSTALL_PREPARE_WIX_INSTALLER=ON -DPDF4QT_INSTALL_TO_USR=ON -DPDF4QT_OCR_REQUIRED=ON -DPDF4QT_BUILD_TESTS=OFF
           cmake --build build --target release_translations --config Release -j6
           cmake --build build --config Release -j6
           cmake --install build --config Release
@@ -169,11 +169,12 @@ jobs:
       - name: Read version
         shell: pwsh
         run: |
-          $match = Select-String -Path ".\pdf4qt\CMakeLists.txt" -Pattern 'set\(QPORTAL_PDFILER_VERSION ([0-9.]+)\)'
-          $version = $match.Matches[0].Groups[1].Value
-          if (-not $version) { Write-Error "QPORTAL_PDFILER_VERSION not found"; exit 1 }
-          Write-Host "Q-Portal PDFiler version: $version"
-          echo "pdfiler_version=$version" >> $env:GITHUB_ENV
+          $match = Select-String -Path ".\pdf4qt\CMakeLists.txt" -Pattern 'set\(QPORTAL_PDFILER_VERSION_LABEL "([^"]+)"\)'
+          $label = $match.Matches[0].Groups[1].Value
+          if (-not $label) { Write-Error "QPORTAL_PDFILER_VERSION_LABEL not found"; exit 1 }
+          $version = $label -replace ' ', '_'
+          Write-Host "Q-Portal PDFiler version: $label"
+          echo "pdfiler_version=$label" >> $env:GITHUB_ENV
           echo "msipackagefilename=Q-Portal-PDFiler_${version}_x64.msi" >> $env:GITHUB_ENV
           echo "zipfilename=Q-Portal-PDFiler_${version}_x64_portable.zip" >> $env:GITHUB_ENV
 

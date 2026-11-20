@@ -7,7 +7,7 @@
   <Product Id="*" Name="Q-Portal PDFiler" Language="1040" Codepage="1252" Version="${QPORTAL_PDFILER_VERSION}" Manufacturer="Q-Portal" UpgradeCode="ea29bf8d-f5ea-412d-865d-824c54c1769f">
     <Package Id="*" InstallerVersion="500" Compressed="yes" InstallScope="perMachine" Platform="x64" Manufacturer="Q-Portal" SummaryCodepage="1252" Languages="1040" Keywords="pdf,editor,viewer" Description="Q-Portal PDFiler - editor PDF (basato su PDF4QT, licenza MIT)" Comments="Basato su PDF4QT di Jakub Melka (licenza MIT)" />
 
-    <MajorUpgrade DowngradeErrorMessage="&#200; gi&#224; installata una versione pi&#249; recente di Q-Portal PDFiler." />
+    <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="&#200; gi&#224; installata una versione pi&#249; recente di Q-Portal PDFiler." />
     <Property Id="ARPPRODUCTICON" Value="PDF4QT_VP_Icon.exe" />
     <Property Id="ARPCOMMENTS" Value="Editor PDF del Q-Portal, basato su PDF4QT (licenza MIT)" />
     <MediaTemplate EmbedCab="yes" />
