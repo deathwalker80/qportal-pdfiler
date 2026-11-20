@@ -50,3 +50,16 @@ entries of `translations/PDF4QT_it.ts`.
 ## License
 
 MIT, see [LICENSE](LICENSE). Third-party libraries keep their own licenses (`3rdparty_licenses/`).
+
+## Web module (intranet)
+
+`web/` builds the companion web module: [BentoPDF](https://github.com/alam00000/bentopdf) (AGPL-3.0),
+self-hosted under `/PDFiler` on the intranet IIS, with every WASM module, OCR model (Italian, English) and
+font served locally, so no request leaves the intranet and every file is processed inside the browser.
+
+```
+bash web/build-web.sh            # produces web-build/Q-Portal-PDFiler-Web.zip
+```
+
+Copy the `PDFiler` folder of the zip into the site root; `web/web.config` sets MIME types, COOP/COEP and CSP
+headers, and needs no extra IIS module. Office to PDF conversions need HTTPS (SharedArrayBuffer).
