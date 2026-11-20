@@ -211,24 +211,22 @@ jobs:
       - name: Upload MSI package
         uses: actions/upload-artifact@v7
         with:
-          name: '${{ env.msipackagefilename }}'
           path: .\pdf4qt\build\install\${{ env.msipackagefilename }}
+          archive: false
           retention-days: 30
-          compression-level: 0
 
       - name: Upload ZIP archive
         uses: actions/upload-artifact@v7
         with:
-          name: '${{ env.zipfilename }}'
           path: .\pdf4qt\build\install\${{ env.zipfilename }}
+          archive: false
           retention-days: 30
-          compression-level: 0
 
       - name: Upload checksums
         uses: actions/upload-artifact@v7
         with:
-          name: SHA256SUMS
           path: .\pdf4qt\build\install\SHA256SUMS.txt
+          archive: false
           retention-days: 30
 
       - name: Draft release (tags only)
