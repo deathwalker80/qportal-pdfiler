@@ -2,9 +2,15 @@ name: Q-Portal PDFiler - Windows MSI
 
 # Builds the Windows x64 MSI installer and the portable ZIP of Q-Portal PDFiler.
 # Started manually (Actions > Run workflow) or by pushing a tag v*, which also creates a draft release.
+# A manual run with "create_release" creates the draft release too (tag v<version>, for example v1.0.0.3-beta).
 
 on:
   workflow_dispatch:
+    inputs:
+      create_release:
+        description: 'Create a draft release with the MSI, the portable ZIP and the checksums'
+        type: boolean
+        default: false
   push:
     tags:
       - 'v*'
@@ -175,6 +181,7 @@ jobs:
           $version = $label -replace ' ', '_'
           Write-Host "Q-Portal PDFiler version: $label"
           echo "pdfiler_version=$label" >> $env:GITHUB_ENV
+          echo "pdfiler_tag=v$($label.ToLower() -replace ' ', '-')" >> $env:GITHUB_ENV
           echo "msipackagefilename=Q-Portal-PDFiler_${version}_x64.msi" >> $env:GITHUB_ENV
           echo "zipfilename=Q-Portal-PDFiler_${version}_x64_portable.zip" >> $env:GITHUB_ENV
 
@@ -229,11 +236,14 @@ jobs:
           archive: false
           retention-days: 30
 
-      - name: Draft release (tags only)
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Draft release (tags, or manual run with create_release)
+        if: startsWith(github.ref, 'refs/tags/v') || inputs.create_release
         uses: softprops/action-gh-release@v2
         with:
           draft: true
+          prerelease: ${{ contains(env.pdfiler_version, 'Beta') }}
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || env.pdfiler_tag }}
+          target_commitish: ${{ github.sha }}
           name: 'Q-Portal PDFiler ${{ env.pdfiler_version }}'
           files: |
             pdf4qt/build/install/${{ env.msipackagefilename }}
