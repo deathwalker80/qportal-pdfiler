@@ -67,20 +67,20 @@ PDFWelcomePage::PDFWelcomePage(QMainWindow* mainWindow,
     setObjectName("welcomePage");
     setAutoFillBackground(true);
 
-    m_newDocumentAction = new QAction(QIcon(":/resources/page.svg"), tr("New Document..."), this);
+    m_newDocumentAction = new QAction(getIcon(":/resources/new-document.svg"), tr("New Document..."), this);
     m_newDocumentAction->setObjectName("actionNewDocument");
     m_newDocumentAction->setShortcut(QKeySequence::New);
     connect(m_newDocumentAction, &QAction::triggered, this, &PDFWelcomePage::onNewDocument);
 
-    m_createPdfAction = new QAction(QIcon(":/resources/extract-image.svg"), tr("Create PDF from Files..."), this);
+    m_createPdfAction = new QAction(getIcon(":/resources/create-pdf.svg"), tr("Create PDF from Files..."), this);
     m_createPdfAction->setObjectName("actionPdfToolCreate");
     connect(m_createPdfAction, &QAction::triggered, this, &PDFWelcomePage::onCreatePdf);
 
-    m_mergePdfAction = new QAction(QIcon(":/resources/sidebar-thumbnails.svg"), tr("Merge PDF Documents..."), this);
+    m_mergePdfAction = new QAction(getIcon(":/resources/merge-pdf.svg"), tr("Merge PDF Documents..."), this);
     m_mergePdfAction->setObjectName("actionPdfToolMerge");
     connect(m_mergePdfAction, &QAction::triggered, this, &PDFWelcomePage::onMergeOrSplitPdf);
 
-    m_splitPdfAction = new QAction(QIcon(":/resources/pce-layout-h.svg"), tr("Split PDF Document..."), this);
+    m_splitPdfAction = new QAction(getIcon(":/resources/split-pdf.svg"), tr("Split PDF Document..."), this);
     m_splitPdfAction->setObjectName("actionPdfToolSplit");
     connect(m_splitPdfAction, &QAction::triggered, this, &PDFWelcomePage::onMergeOrSplitPdf);
 
@@ -168,16 +168,16 @@ PDFWelcomePage::PDFWelcomePage(QMainWindow* mainWindow,
     if (isEditor)
     {
         tiles << createTile(openAction, getIcon(":/resources/open.svg"), tr("Open a PDF"), tr("Read, comment, sign or change a document."));
-        tiles << createTile(m_newDocumentAction, getIcon(":/resources/page.svg"), tr("New document"), tr("Create an empty A4 document and write into it."));
+        tiles << createTile(m_newDocumentAction, getIcon(":/resources/new-document.svg"), tr("New document"), tr("Create an empty A4 document and write into it."));
     }
     else
     {
         tiles << createTile(openAction, getIcon(":/resources/open.svg"), tr("Open a PDF"), tr("Read and print a document."));
     }
 
-    tiles << createTile(m_createPdfAction, getIcon(":/resources/extract-image.svg"), tr("Create a PDF from files"), tr("Word, Excel, PowerPoint, images, text: one PDF from many files."));
-    tiles << createTile(m_mergePdfAction, getIcon(":/resources/sidebar-thumbnails.svg"), tr("Merge PDF documents"), tr("Join documents, sort, rotate and remove the pages."));
-    tiles << createTile(m_splitPdfAction, getIcon(":/resources/pce-layout-h.svg"), tr("Split a PDF"), tr("Extract pages or divide a document into more files."));
+    tiles << createTile(m_createPdfAction, getIcon(":/resources/create-pdf.svg"), tr("Create a PDF from files"), tr("Word, Excel, PowerPoint, images, text: one PDF from many files."));
+    tiles << createTile(m_mergePdfAction, getIcon(":/resources/merge-pdf.svg"), tr("Merge PDF documents"), tr("Join documents, sort, rotate and remove the pages."));
+    tiles << createTile(m_splitPdfAction, getIcon(":/resources/split-pdf.svg"), tr("Split a PDF"), tr("Extract pages or divide a document into more files."));
 
     // Scanning is provided by a plugin (the icon of its action is already prepared for the theme)
     for (QAction* action : m_actionManager->getActions())

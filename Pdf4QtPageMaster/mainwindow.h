@@ -255,6 +255,7 @@ private:
     void createRibbon();
     void hideClassicToolBars();
     void updateQualityButton();
+    QIcon getRibbonIcon(const QString& fileName) const;
 
     struct Settings
     {

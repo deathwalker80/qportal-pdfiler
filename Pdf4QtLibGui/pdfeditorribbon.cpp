@@ -274,7 +274,7 @@ void PDFEditorRibbon::createFilePage()
         recentFileActions << action;
     }
     recentFileActions << getAction(PDFActionManager::ClearRecentFileHistory);
-    documentGroup->addLargeMenu(getIcon(":/resources/book.svg"), tr("Recent"), tr("Opens one of the documents, which were opened recently."), recentFileActions);
+    documentGroup->addLargeMenu(getIcon(":/resources/recent-documents.svg"), tr("Recent"), tr("Opens one of the documents, which were opened recently."), recentFileActions);
 
     documentGroup->addLargeAction(getAction(PDFActionManager::Save), tr("Save"), tr("Saves the changes into the document."));
     documentGroup->addSmallAction(getAction(PDFActionManager::SaveAs), tr("Save As"), tr("Saves the document into a new file, the original file stays unchanged."));
@@ -284,7 +284,7 @@ void PDFEditorRibbon::createFilePage()
     PDFRibbonGroup* shareGroup = page->addGroup(tr("Print and Share"));
     shareGroup->addLargeAction(getAction(PDFActionManager::Print), tr("Print"), tr("Prints the document on a printer."));
     shareGroup->addLargeAction(getAction(PDFActionManager::SendByMail), tr("Send by E-Mail"), tr("Creates a new e-mail message with the document as an attachment."));
-    shareGroup->addLargeAction(getAction(PDFActionManager::RenderToImages), tr("Export as Images"), tr("Saves the pages of the document as image files (PNG, JPEG, TIFF and others)."), getIcon(":/resources/extract-image.svg"));
+    shareGroup->addLargeAction(getAction(PDFActionManager::RenderToImages), tr("Export as Images"), tr("Saves the pages of the document as image files (PNG, JPEG, TIFF and others)."), getIcon(":/resources/export-images.svg"));
 
     PDFRibbonGroup* infoGroup = page->addGroup(tr("Information"));
     infoGroup->addLargeAction(getAction(PDFActionManager::Properties), tr("Properties"), tr("Shows the properties of the document: title, author, page size, fonts, security."));
@@ -371,7 +371,7 @@ void PDFEditorRibbon::createInsertPage()
     PDFRibbonGroup* commentsGroup = page->addGroup(tr("Comments"));
     commentsGroup->addLargeMenu(getIcon(":/resources/annot-sticky-note.svg"), tr("Note"), tr("Inserts a note (sticky note) into the page. Click on the place of the note."),
                                 getGroupActions(PDFActionManager::CreateStickyNoteGroup));
-    commentsGroup->addLargeMenu(getIcon(":/resources/bubble.svg"), tr("Stamp"), tr("Inserts a stamp (Approved, Draft, Confidential, ...) into the page."),
+    commentsGroup->addLargeMenu(getIcon(":/resources/stamp.svg"), tr("Stamp"), tr("Inserts a stamp (Approved, Draft, Confidential, ...) into the page."),
                                 getGroupActions(PDFActionManager::CreateStampGroup));
 }
 
@@ -414,7 +414,7 @@ void PDFEditorRibbon::createCommentsPage()
     notesGroup->addLargeMenu(getIcon(":/resources/annot-sticky-note.svg"), tr("New Note"), tr("Inserts a note (sticky note) into the page. Click on the place of the note."),
                              getGroupActions(PDFActionManager::CreateStickyNoteGroup));
     notesGroup->addLargeAction(getAction(PDFActionManager::CreateInlineText), tr("Text Comment"), tr("Inserts a text as a comment, which is displayed over the page and can be removed later."));
-    notesGroup->addLargeMenu(getIcon(":/resources/bubble.svg"), tr("Stamp"), tr("Inserts a stamp (Approved, Draft, Confidential, ...) into the page."),
+    notesGroup->addLargeMenu(getIcon(":/resources/stamp.svg"), tr("Stamp"), tr("Inserts a stamp (Approved, Draft, Confidential, ...) into the page."),
                              getGroupActions(PDFActionManager::CreateStampGroup));
 
     PDFRibbonGroup* markupGroup = page->addGroup(tr("Text Markup"));
@@ -496,7 +496,7 @@ void PDFEditorRibbon::createPagePage()
 
     PDFRibbonGroup* scanGroup = page->addGroup(tr("Scanned Pages"));
     scanGroup->addLargeAction(findAction("scannerplugin_ScanPages"), tr("Scan"), tr("Acquires the pages from a scanner into the document."));
-    scanGroup->addLargeAction(getAction(PDFActionManager::PrepareScannedPages), tr("Straighten and Crop"), tr("Straightens the skewed scanned pages, crops their margins and splits the double pages."), getIcon(":/resources/page.svg"));
+    scanGroup->addLargeAction(getAction(PDFActionManager::PrepareScannedPages), tr("Straighten and Crop"), tr("Straightens the skewed scanned pages, crops their margins and splits the double pages."), getIcon(":/resources/straighten-pages.svg"));
 
     PDFRibbonGroup* navigationGroup = page->addGroup(tr("Go To"));
     navigationGroup->addSmallAction(getAction(PDFActionManager::GoToDocumentStart), tr("First Page"), tr("Goes to the first page of the document."));
@@ -583,7 +583,7 @@ void PDFEditorRibbon::createViewPage()
 
     PDFRibbonGroup* showGroup = page->addGroup(tr("Show"));
     showGroup->addLargeAction(m_sidebarAction, tr("Sidebar"), tr("Shows the sidebar with the outline, thumbnails of the pages, bookmarks, attachments and notes."), getIcon(":/resources/sidebar-visibility.svg"));
-    showGroup->addLargeAction(getAction(PDFActionManager::FullscreenMode), tr("Full Screen"), tr("Shows the document on the whole screen. Press Esc to return."), getIcon(":/resources/zoom-fit.svg"));
+    showGroup->addLargeAction(getAction(PDFActionManager::FullscreenMode), tr("Full Screen"), tr("Shows the document on the whole screen. Press Esc to return."), getIcon(":/resources/fullscreen.svg"));
     showGroup->addSmallAction(getAction(PDFActionManager::RenderOptionDisplayAnnotations), tr("Comments"), tr("Shows or hides the comments, notes and highlights of the pages."));
     showGroup->addSmallMenu(getIcon(":/resources/rendering.svg"), tr("Display Quality"), tr("Settings of the quality of the display of the pages (smoothing of the text and of the images)."),
                             { getAction(PDFActionManager::RenderOptionAntialiasing), getAction(PDFActionManager::RenderOptionTextAntialiasing),

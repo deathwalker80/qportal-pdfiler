@@ -1365,7 +1365,7 @@ void MainWindow::createRibbon()
     }
 
     PDFRibbonGroup* saveGroup = homePage->addGroup(tr("Create PDF"));
-    m_qualityButton = saveGroup->addLargeMenu(ui->actionProperties->icon(), tr("Quality"), tr("Quality of the images in the created PDF documents. A lower quality means a smaller file."), qualityActions);
+    m_qualityButton = saveGroup->addLargeMenu(getRibbonIcon(":/pdfpagemaster/resources/quality.svg"), tr("Quality"), tr("Quality of the images in the created PDF documents. A lower quality means a smaller file."), qualityActions);
     saveGroup->addLargeAction(ui->actionUnited_Document, tr("Save as One PDF"), tr("Creates one PDF document from all pages, in the order shown in the window."));
     saveGroup->addLargeAction(ui->actionSplit, tr("Split"), tr("Divides the pages into more PDF documents: every page, every N pages, at page numbers, by bookmarks or by size."));
     saveGroup->addSmallAction(ui->actionSeparate_to_Multiple_Documents, tr("One PDF per Item"), tr("Creates a separate PDF document from each item of the window."));
@@ -1445,6 +1445,17 @@ void MainWindow::createRibbon()
     {
         addAction(action);
     }
+}
+
+QIcon MainWindow::getRibbonIcon(const QString& fileName) const
+{
+    // Icons of the actions are converted for the dark theme with the actions, icons of the ribbon itself here
+    QIcon icon(fileName);
+    if (pdf::PDFWidgetUtils::isDarkTheme())
+    {
+        icon = pdf::PDFWidgetUtils::convertIconForDarkTheme(icon, pdf::PDFWidgetUtils::scaleDPI(this, QSize(32, 32)), devicePixelRatioF());
+    }
+    return icon;
 }
 
 void MainWindow::hideClassicToolBars()

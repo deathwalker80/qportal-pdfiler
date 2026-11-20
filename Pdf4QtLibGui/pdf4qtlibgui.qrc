@@ -64,6 +64,15 @@
         <file>resources/annot-sticky-note.svg</file>
         <file>resources/annot-straight-line.svg</file>
         <file>resources/close.svg</file>
+        <file>resources/new-document.svg</file>
+        <file>resources/recent-documents.svg</file>
+        <file>resources/export-images.svg</file>
+        <file>resources/stamp.svg</file>
+        <file>resources/straighten-pages.svg</file>
+        <file>resources/fullscreen.svg</file>
+        <file>resources/create-pdf.svg</file>
+        <file>resources/merge-pdf.svg</file>
+        <file>resources/split-pdf.svg</file>
         <file>resources/delete-annotations.svg</file>
         <file>resources/copy-text.svg</file>
         <file>resources/deselect-text.svg</file>

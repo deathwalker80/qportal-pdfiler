@@ -44,6 +44,7 @@
         <file>resources/page-geometry.svg</file>
         <file>resources/crop-pages.svg</file>
         <file>resources/properties.svg</file>
+        <file>resources/quality.svg</file>
         <file>resources/rename-group.svg</file>
         <file>resources/reset-rotation.svg</file>
         <file>resources/details-view.svg</file>
