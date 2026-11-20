@@ -30,6 +30,7 @@
 
 #include <QObject>
 #include <vector>
+#include <functional>
 
 namespace pdf
 {
@@ -88,6 +89,14 @@ private:
     void onFontChanged(const QFont& font);
     void onAlignmentChanged(Qt::Alignment alignment);
     void onTextAngleChanged(pdf::PDFReal angle);
+
+    void onSelectedElementsFontChangeRequested(const QFont& font);
+    void onSelectedElementsAlignmentChangeRequested(Qt::Alignment alignment);
+    void onSelectedElementsTextColorChangeRequested(const QColor& color);
+
+    /// Applies the modification to the copies of the selected text boxes and
+    /// replaces the selected text boxes by the modified copies
+    void modifySelectedTextBoxes(const std::function<void(pdf::PDFPageContentElementTextBox*)>& modifier);
 
     /// Turns on/off the creation of multiple elements by all the creation tools
     /// and stores the setting, so it is restored in the next session.

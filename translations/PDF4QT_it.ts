@@ -23061,6 +23061,1575 @@ Fai doppio clic sulla riga per aprire il testo della licenza.</translation>
             <source> / %1</source>
             <translation> / %1</translation>
         </message>
+        <message>
+            <location filename="../Pdf4QtLibGui/pdfeditormainwindow.cpp" line="+0" />
+            <source>Ribbon</source>
+            <translation>Barra multifunzione</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Page</source>
+            <translation>Pagina</translation>
+        </message>
+    </context>
+    <context>
+        <name>pdfviewer::PDFEditorRibbon</name>
+        <message>
+            <location filename="../Pdf4QtLibGui/pdfeditorribbon.cpp" line="+80" />
+            <location line="+84" />
+            <source>Save</source>
+            <translation>Salva</translation>
+        </message>
+        <message>
+            <location line="-84" />
+            <source>Saves the document.</source>
+            <translation>Salva il documento.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <location line="+111" />
+            <location line="+1" />
+            <source>Undo</source>
+            <translation>Annulla</translation>
+        </message>
+        <message>
+            <location line="-112" />
+            <location line="+112" />
+            <source>Undoes the last change of the document.</source>
+            <translation>Annulla l&apos;ultima modifica del documento.</translation>
+        </message>
+        <message>
+            <location line="-111" />
+            <location line="+112" />
+            <source>Redo</source>
+            <translation>Ripeti</translation>
+        </message>
+        <message>
+            <location line="-112" />
+            <location line="+112" />
+            <source>Repeats the change, which was undone.</source>
+            <translation>Ripete la modifica annullata.</translation>
+        </message>
+        <message>
+            <location line="-43" />
+            <source>File</source>
+            <translation>File</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Document</source>
+            <translation>Documento</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Open</source>
+            <translation>Apri</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Opens a PDF document from the computer or from a network folder.</source>
+            <translation>Apre un documento PDF dal computer o da una cartella di rete.</translation>
+        </message>
+        <message>
+            <location line="+8" />
+            <source>Recent</source>
+            <translation>Recenti</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Opens one of the documents, which were opened recently.</source>
+            <translation>Apre uno dei documenti aperti di recente.</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Saves the changes into the document.</source>
+            <translation>Salva le modifiche nel documento.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Save As</source>
+            <translation>Salva con nome</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Saves the document into a new file, the original file stays unchanged.</source>
+            <translation>Salva il documento in un nuovo file, il file originale resta invariato.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Close</source>
+            <translation>Chiudi</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Closes the document.</source>
+            <translation>Chiude il documento.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Automatic Refresh</source>
+            <translation>Aggiornamento automatico</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Reloads the document automatically, when the file is changed by another program.</source>
+            <translation>Ricarica automaticamente il documento quando il file viene modificato da un altro programma.</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Print and Share</source>
+            <translation>Stampa e condividi</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Print</source>
+            <translation>Stampa</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Prints the document on a printer.</source>
+            <translation>Stampa il documento su una stampante.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Send by E-Mail</source>
+            <translation>Invia per e-mail</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Creates a new e-mail message with the document as an attachment.</source>
+            <translation>Crea un nuovo messaggio di posta elettronica con il documento in allegato.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Export as Images</source>
+            <translation>Esporta come immagini</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Saves the pages of the document as image files (PNG, JPEG, TIFF and others).</source>
+            <translation>Salva le pagine del documento come file immagine (PNG, JPEG, TIFF e altri).</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Information</source>
+            <translation>Informazioni</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Properties</source>
+            <translation>Proprietà</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the properties of the document: title, author, page size, fonts, security.</source>
+            <translation>Mostra le proprietà del documento: titolo, autore, formato pagina, caratteri, sicurezza.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <location line="+216" />
+            <source>Protect Document</source>
+            <translation>Proteggi documento</translation>
+        </message>
+        <message>
+            <location line="-216" />
+            <location line="+216" />
+            <source>Protects the document by a password and sets the permissions (printing, copying, changes).</source>
+            <translation>Protegge il documento con una password e imposta le autorizzazioni (stampa, copia, modifiche).</translation>
+        </message>
+        <message>
+            <location line="-214" />
+            <source>Application</source>
+            <translation>Applicazione</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <location line="+238" />
+            <source>Options</source>
+            <translation>Opzioni</translation>
+        </message>
+        <message>
+            <location line="-238" />
+            <location line="+238" />
+            <source>Settings of the application: display, rendering, security, shortcuts, plugins.</source>
+            <translation>Impostazioni dell&apos;applicazione: visualizzazione, rendering, sicurezza, scorciatoie, plugin.</translation>
+        </message>
+        <message>
+            <location line="-237" />
+            <source>Exit</source>
+            <translation>Esci</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Closes the application.</source>
+            <translation>Chiude l&apos;applicazione.</translation>
+        </message>
+        <message>
+            <location line="+5" />
+            <source>Home</source>
+            <translation>Home</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Clipboard</source>
+            <translation>Appunti</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Copy</source>
+            <translation>Copia</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Copies the selected text to the clipboard. Select the text first by the Select Text tool.</source>
+            <translation>Copia negli appunti il testo selezionato. Prima seleziona il testo con lo strumento Seleziona testo.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Select All</source>
+            <translation>Seleziona tutto</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Selects all the text of the document.</source>
+            <translation>Seleziona tutto il testo del documento.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Deselect</source>
+            <translation>Deseleziona</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Cancels the selection of the text.</source>
+            <translation>Annulla la selezione del testo.</translation>
+        </message>
+        <message>
+            <location line="+9" />
+            <source>Selection</source>
+            <translation>Selezione</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Select Text</source>
+            <translation>Seleziona testo</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Selects the text of the page by the mouse, the selected text can be copied.</source>
+            <translation>Seleziona con il mouse il testo della pagina; il testo selezionato può essere copiato.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Select Table</source>
+            <translation>Seleziona tabella</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Selects a table on the page and copies its cells (for example into a spreadsheet).</source>
+            <translation>Seleziona una tabella della pagina e ne copia le celle (ad esempio in un foglio di calcolo).</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Snapshot</source>
+            <translation>Istantanea</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Copies a rectangular area of the page as an image into the clipboard.</source>
+            <translation>Copia negli appunti un&apos;area rettangolare della pagina come immagine.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Extract Image</source>
+            <translation>Estrai immagine</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Saves an image of the page into a file or copies it into the clipboard.</source>
+            <translation>Salva in un file un&apos;immagine della pagina o la copia negli appunti.</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <location line="+1" />
+            <location line="+89" />
+            <source>Highlight</source>
+            <translation>Evidenzia</translation>
+        </message>
+        <message>
+            <location line="-89" />
+            <location line="+89" />
+            <source>Highlights the text, which is selected by the mouse, as by a highlighter.</source>
+            <translation>Evidenzia il testo selezionato con il mouse, come con un evidenziatore.</translation>
+        </message>
+        <message>
+            <location line="-88" />
+            <location line="+89" />
+            <location line="+204" />
+            <source>Underline</source>
+            <translation>Sottolinea</translation>
+        </message>
+        <message>
+            <location line="-293" />
+            <location line="+89" />
+            <source>Underlines the text, which is selected by the mouse.</source>
+            <translation>Sottolinea il testo selezionato con il mouse.</translation>
+        </message>
+        <message>
+            <location line="-88" />
+            <location line="+89" />
+            <source>Strikeout</source>
+            <translation>Barrato</translation>
+        </message>
+        <message>
+            <location line="-89" />
+            <location line="+89" />
+            <source>Strikes out the text, which is selected by the mouse.</source>
+            <translation>Barra il testo selezionato con il mouse.</translation>
+        </message>
+        <message>
+            <location line="-88" />
+            <location line="+89" />
+            <source>Squiggly</source>
+            <translation>Ondulato</translation>
+        </message>
+        <message>
+            <location line="-89" />
+            <location line="+89" />
+            <source>Underlines the text, which is selected by the mouse, by a wavy line.</source>
+            <translation>Sottolinea con una linea ondulata il testo selezionato con il mouse.</translation>
+        </message>
+        <message>
+            <location line="-87" />
+            <location line="+50" />
+            <location line="+2" />
+            <source>Edit</source>
+            <translation>Modifica</translation>
+        </message>
+        <message>
+            <location line="-51" />
+            <location line="+52" />
+            <source>Edit Text and Images</source>
+            <translation>Modifica testo e immagini</translation>
+        </message>
+        <message>
+            <location line="-52" />
+            <location line="+52" />
+            <source>Turns on the editing of the content of the pages: texts, images and graphics can be selected, moved, changed and deleted. Double-click an item to change it.</source>
+            <translation>Attiva la modifica del contenuto delle pagine: testi, immagini e grafica si possono selezionare, spostare, cambiare ed eliminare. Fai doppio clic su un elemento per modificarlo.</translation>
+        </message>
+        <message>
+            <location line="-50" />
+            <location line="+1" />
+            <source>Find</source>
+            <translation>Trova</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Finds a word or a phrase in the document.</source>
+            <translation>Cerca una parola o una frase nel documento.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Previous</source>
+            <translation>Precedente</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Goes to the previous occurrence of the searched text.</source>
+            <translation>Va al risultato precedente del testo cercato.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Next</source>
+            <translation>Successivo</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Goes to the next occurrence of the searched text.</source>
+            <translation>Va al risultato successivo del testo cercato.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Advanced Find</source>
+            <translation>Ricerca avanzata</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Finds the text with more options (whole words, case sensitivity, regular expressions) and lists all occurrences.</source>
+            <translation>Cerca il testo con più opzioni (parole intere, maiuscole/minuscole, espressioni regolari) ed elenca tutti i risultati.</translation>
+        </message>
+        <message>
+            <location line="+5" />
+            <location line="+46" />
+            <source>Insert</source>
+            <translation>Inserisci</translation>
+        </message>
+        <message>
+            <location line="-44" />
+            <source>Pages</source>
+            <translation>Pagine</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <location line="+138" />
+            <source>Page Numbers</source>
+            <translation>Numeri di pagina</translation>
+        </message>
+        <message>
+            <location line="-138" />
+            <location line="+138" />
+            <source>Inserts the numbers of the pages (header or footer) into the document.</source>
+            <translation>Inserisce i numeri di pagina (intestazione o piè di pagina) nel documento.</translation>
+        </message>
+        <message>
+            <location line="-136" />
+            <source>Text</source>
+            <translation>Testo</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <location line="+41" />
+            <source>Text Box</source>
+            <translation>Casella di testo</translation>
+        </message>
+        <message>
+            <location line="-41" />
+            <location line="+41" />
+            <source>Inserts a text into the page. Draw a rectangle by the mouse and write the text. The text becomes a part of the page.</source>
+            <translation>Inserisce un testo nella pagina. Traccia un rettangolo con il mouse e scrivi il testo. Il testo diventa parte della pagina.</translation>
+        </message>
+        <message>
+            <location line="-40" />
+            <location line="+60" />
+            <source>Text Comment</source>
+            <translation>Commento di testo</translation>
+        </message>
+        <message>
+            <location line="-60" />
+            <location line="+60" />
+            <source>Inserts a text as a comment, which is displayed over the page and can be removed later.</source>
+            <translation>Inserisce un testo come commento, visualizzato sopra la pagina e rimovibile in seguito.</translation>
+        </message>
+        <message>
+            <location line="-58" />
+            <source>Illustrations</source>
+            <translation>Illustrazioni</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <location line="+38" />
+            <source>Image</source>
+            <translation>Immagine</translation>
+        </message>
+        <message>
+            <location line="-38" />
+            <location line="+38" />
+            <source>Inserts an image into the page. Draw a rectangle by the mouse and select the image file.</source>
+            <translation>Inserisce un&apos;immagine nella pagina. Traccia un rettangolo con il mouse e scegli il file dell&apos;immagine.</translation>
+        </message>
+        <message>
+            <location line="-37" />
+            <location line="+38" />
+            <source>Shapes</source>
+            <translation>Forme</translation>
+        </message>
+        <message>
+            <location line="-38" />
+            <location line="+38" />
+            <source>Inserts a shape into the page: rectangle, line, point or freehand drawing.</source>
+            <translation>Inserisce una forma nella pagina: rettangolo, linea, punto o disegno a mano libera.</translation>
+        </message>
+        <message>
+            <location line="-34" />
+            <source>Check Mark</source>
+            <translation>Segno di spunta</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Inserts a check mark into the page (for example into a check box of a form).</source>
+            <translation>Inserisce un segno di spunta nella pagina (ad esempio in una casella di un modulo).</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Cross Mark</source>
+            <translation>Croce</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Inserts a cross mark into the page.</source>
+            <translation>Inserisce una croce nella pagina.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Insert Repeatedly</source>
+            <translation>Inserimento ripetuto</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>When it is turned on, the selected tool stays active and more items can be inserted one after another.</source>
+            <translation>Quando è attivo, lo strumento scelto resta attivo e si possono inserire più elementi uno dopo l&apos;altro.</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <location line="+101" />
+            <source>Links</source>
+            <translation>Collegamenti</translation>
+        </message>
+        <message>
+            <location line="-100" />
+            <location line="+101" />
+            <source>Link</source>
+            <translation>Collegamento</translation>
+        </message>
+        <message>
+            <location line="-101" />
+            <location line="+101" />
+            <source>Inserts a link to a web page or to a file. Draw a rectangle over the text or the image, which will be the link.</source>
+            <translation>Inserisce un collegamento a una pagina web o a un file. Traccia un rettangolo sul testo o sull&apos;immagine che diventerà il collegamento.</translation>
+        </message>
+        <message>
+            <location line="-100" />
+            <location line="+101" />
+            <source>Link in Document</source>
+            <translation>Collegamento nel documento</translation>
+        </message>
+        <message>
+            <location line="-101" />
+            <location line="+101" />
+            <source>Inserts a link to another place of this document.</source>
+            <translation>Inserisce un collegamento a un altro punto di questo documento.</translation>
+        </message>
+        <message>
+            <location line="-95" />
+            <source>Outline Item</source>
+            <translation>Nuovo segnalibro</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <location line="+82" />
+            <source>Inserts a new item of the outline (table of contents in the sidebar), which points to the current place of the document.</source>
+            <translation>Inserisce un nuovo segnalibro (indice nella barra laterale) che punta alla posizione corrente del documento.</translation>
+        </message>
+        <message>
+            <location line="-80" />
+            <location line="+33" />
+            <location line="+166" />
+            <source>Comments</source>
+            <translation>Commenti</translation>
+        </message>
+        <message>
+            <location line="-198" />
+            <source>Note</source>
+            <translation>Nota</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <location line="+35" />
+            <source>Inserts a note (sticky note) into the page. Click on the place of the note.</source>
+            <translation>Inserisce una nota (nota adesiva) nella pagina. Fai clic nel punto della nota.</translation>
+        </message>
+        <message>
+            <location line="-33" />
+            <location line="+36" />
+            <source>Stamp</source>
+            <translation>Timbro</translation>
+        </message>
+        <message>
+            <location line="-36" />
+            <location line="+36" />
+            <source>Inserts a stamp (Approved, Draft, Confidential, ...) into the page.</source>
+            <translation>Inserisce un timbro (Approvato, Bozza, Riservato, ...) nella pagina.</translation>
+        </message>
+        <message>
+            <location line="-26" />
+            <source>Undo Edit</source>
+            <translation>Annulla modifica</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Undoes the last change made by the editing of the content.</source>
+            <translation>Annulla l&apos;ultima modifica fatta al contenuto.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Redo Edit</source>
+            <translation>Ripeti modifica</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Repeats the change of the content, which was undone.</source>
+            <translation>Ripete la modifica al contenuto che era stata annullata.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Remove New Items</source>
+            <translation>Rimuovi nuovi elementi</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Removes all items inserted by the editing, which were not saved yet.</source>
+            <translation>Rimuove tutti gli elementi inseriti con la modifica e non ancora salvati.</translation>
+        </message>
+        <message>
+            <location line="+10" />
+            <location line="+79" />
+            <source>Page</source>
+            <translation>Pagina</translation>
+        </message>
+        <message>
+            <location line="-78" />
+            <location line="+85" />
+            <source>Page Size</source>
+            <translation>Dimensioni pagina</translation>
+        </message>
+        <message>
+            <location line="-85" />
+            <location line="+85" />
+            <source>Changes the size, the margins and the cropping of the pages.</source>
+            <translation>Cambia le dimensioni, i margini e il ritaglio delle pagine.</translation>
+        </message>
+        <message>
+            <location line="-84" />
+            <location line="+80" />
+            <source>Rotate Left</source>
+            <translation>Ruota a sinistra</translation>
+        </message>
+        <message>
+            <location line="-80" />
+            <location line="+80" />
+            <source>Rotates the view of the pages by 90 degrees to the left.</source>
+            <translation>Ruota la visualizzazione delle pagine di 90 gradi a sinistra.</translation>
+        </message>
+        <message>
+            <location line="-79" />
+            <location line="+80" />
+            <source>Rotate Right</source>
+            <translation>Ruota a destra</translation>
+        </message>
+        <message>
+            <location line="-80" />
+            <location line="+80" />
+            <source>Rotates the view of the pages by 90 degrees to the right.</source>
+            <translation>Ruota la visualizzazione delle pagine di 90 gradi a destra.</translation>
+        </message>
+        <message>
+            <location line="-73" />
+            <source>Notes</source>
+            <translation>Note</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>New Note</source>
+            <translation>Nuova nota</translation>
+        </message>
+        <message>
+            <location line="+6" />
+            <source>Text Markup</source>
+            <translation>Evidenziazione testo</translation>
+        </message>
+        <message>
+            <location line="+6" />
+            <source>Drawing</source>
+            <translation>Disegno</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Line</source>
+            <translation>Linea</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Draws a line as a comment.</source>
+            <translation>Disegna una linea come commento.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Polyline</source>
+            <translation>Polilinea</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Draws a broken line as a comment. Finish it by a double-click.</source>
+            <translation>Disegna una linea spezzata come commento. Termina con un doppio clic.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Freehand</source>
+            <translation>Mano libera</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Draws by the mouse as by a pen, as a comment.</source>
+            <translation>Disegna con il mouse come con una penna, come commento.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Rectangle</source>
+            <translation>Rettangolo</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Draws a rectangle as a comment.</source>
+            <translation>Disegna un rettangolo come commento.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Ellipse</source>
+            <translation>Ellisse</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Draws an ellipse as a comment.</source>
+            <translation>Disegna un&apos;ellisse come commento.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Polygon</source>
+            <translation>Poligono</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Draws a polygon as a comment. Finish it by a double-click.</source>
+            <translation>Disegna un poligono come commento. Termina con un doppio clic.</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Delete</source>
+            <translation>Elimina</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Delete Comments</source>
+            <translation>Elimina commenti</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Deletes the selected comments, notes, highlights and stamps.</source>
+            <translation>Elimina i commenti, le note, le evidenziazioni e i timbri selezionati.</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <location line="+1" />
+            <source>Measure</source>
+            <translation>Misura</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Measures distances, perimeters, areas and angles on the page.</source>
+            <translation>Misura distanze, perimetri, aree e angoli sulla pagina.</translation>
+        </message>
+        <message>
+            <location line="+4" />
+            <source>Show Measurements</source>
+            <translation>Mostra misure</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows or hides the measurements.</source>
+            <translation>Mostra o nasconde le misure.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Clear Measurements</source>
+            <translation>Cancella misure</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Removes all measurements.</source>
+            <translation>Rimuove tutte le misure.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Export Measurements</source>
+            <translation>Esporta misure</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Saves the measurements into a file.</source>
+            <translation>Salva le misure in un file.</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Sign</source>
+            <translation>Firma</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Prepare Signature</source>
+            <translation>Prepara firma</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Turns on the creation of the signature: write a text or draw the signature by the mouse.</source>
+            <translation>Attiva la creazione della firma: scrivi un testo o disegna la firma con il mouse.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Sign Electronically</source>
+            <translation>Firma elettronicamente</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Inserts the prepared signature into the document.</source>
+            <translation>Inserisce nel documento la firma preparata.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Sign with Certificate</source>
+            <translation>Firma con certificato</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Signs the document digitally by a certificate (smart card or certificate file).</source>
+            <translation>Firma digitalmente il documento con un certificato (smart card o file del certificato).</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <location line="+94" />
+            <source>Certificates</source>
+            <translation>Certificati</translation>
+        </message>
+        <message>
+            <location line="-94" />
+            <location line="+94" />
+            <source>Manages the certificates used for the digital signatures.</source>
+            <translation>Gestisce i certificati usati per le firme digitali.</translation>
+        </message>
+        <message>
+            <location line="-89" />
+            <source>References</source>
+            <translation>Riferimenti</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Table of Contents</source>
+            <translation>Segnalibri</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Add Item</source>
+            <translation>Nuovo segnalibro</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Show Sidebar</source>
+            <translation>Mostra barra laterale</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <location line="+116" />
+            <source>Shows the sidebar with the outline, thumbnails of the pages, bookmarks, attachments and notes.</source>
+            <translation>Mostra la barra laterale con segnalibri, miniature delle pagine, preferiti, allegati e note.</translation>
+        </message>
+        <message>
+            <location line="-114" />
+            <source>Bookmarks</source>
+            <translation>Preferiti</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Bookmark Page</source>
+            <translation>Pagina nei preferiti</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Adds the current page to the bookmarks, to return to it quickly.</source>
+            <translation>Aggiunge la pagina corrente ai preferiti, per tornarci rapidamente.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Previous Bookmark</source>
+            <translation>Preferito precedente</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Goes to the previous bookmarked page.</source>
+            <translation>Va alla pagina precedente tra i preferiti.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Next Bookmark</source>
+            <translation>Preferito successivo</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Goes to the next bookmarked page.</source>
+            <translation>Va alla pagina successiva tra i preferiti.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Generate Bookmarks</source>
+            <translation>Genera preferiti</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Creates the bookmarks automatically from the outline of the document.</source>
+            <translation>Crea automaticamente i preferiti dai segnalibri del documento.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Export Bookmarks</source>
+            <translation>Esporta preferiti</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Saves the bookmarks into a file.</source>
+            <translation>Salva i preferiti in un file.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Import Bookmarks</source>
+            <translation>Importa preferiti</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Loads the bookmarks from a file.</source>
+            <translation>Carica i preferiti da un file.</translation>
+        </message>
+        <message>
+            <location line="+10" />
+            <location line="+46" />
+            <source>Remove External Links</source>
+            <translation>Rimuovi collegamenti esterni</translation>
+        </message>
+        <message>
+            <location line="-46" />
+            <location line="+46" />
+            <source>Removes the links to web pages and to other files from the document.</source>
+            <translation>Rimuove dal documento i collegamenti a pagine web e ad altri file.</translation>
+        </message>
+        <message>
+            <location line="-39" />
+            <source>Rotate</source>
+            <translation>Ruota</translation>
+        </message>
+        <message>
+            <location line="+4" />
+            <source>Page Setup</source>
+            <translation>Imposta pagina</translation>
+        </message>
+        <message>
+            <location line="+4" />
+            <source>Scanned Pages</source>
+            <translation>Pagine scansionate</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Scan</source>
+            <translation>Scansiona</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Acquires the pages from a scanner into the document.</source>
+            <translation>Acquisisce le pagine da uno scanner nel documento.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Straighten and Crop</source>
+            <translation>Raddrizza e ritaglia</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Straightens the skewed scanned pages, crops their margins and splits the double pages.</source>
+            <translation>Raddrizza le pagine scansionate storte, ne ritaglia i margini e divide le pagine doppie.</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Go To</source>
+            <translation>Vai a</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>First Page</source>
+            <translation>Prima pagina</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Goes to the first page of the document.</source>
+            <translation>Va alla prima pagina del documento.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Previous Page</source>
+            <translation>Pagina precedente</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Goes to the previous page.</source>
+            <translation>Va alla pagina precedente.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Next Page</source>
+            <translation>Pagina successiva</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Goes to the next page.</source>
+            <translation>Va alla pagina successiva.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Last Page</source>
+            <translation>Ultima pagina</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Goes to the last page of the document.</source>
+            <translation>Va all&apos;ultima pagina del documento.</translation>
+        </message>
+        <message>
+            <location line="+5" />
+            <source>Tools</source>
+            <translation>Strumenti</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Text Recognition</source>
+            <translation>Riconoscimento testo</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Recognize Text (OCR)</source>
+            <translation>Riconosci testo (OCR)</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Recognizes the text of the scanned pages, the text can be then searched, selected and copied.</source>
+            <translation>Riconosce il testo delle pagine scansionate; il testo si potrà poi cercare, selezionare e copiare.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Recognize More Files</source>
+            <translation>Riconosci più file</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Recognizes the text of more documents one after another.</source>
+            <translation>Riconosce il testo di più documenti uno dopo l&apos;altro.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>OCR Languages</source>
+            <translation>Lingue OCR</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the languages available for the recognition of the text and adds new ones.</source>
+            <translation>Mostra le lingue disponibili per il riconoscimento del testo e ne aggiunge di nuove.</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Reduce Size</source>
+            <translation>Riduci dimensioni</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Optimize</source>
+            <translation>Ottimizza</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Reduces the size of the document file, the content stays the same.</source>
+            <translation>Riduce le dimensioni del file del documento, il contenuto resta lo stesso.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Optimize Images</source>
+            <translation>Ottimizza immagini</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Reduces the size of the images of the document (resolution and compression).</source>
+            <translation>Riduce le dimensioni delle immagini del documento (risoluzione e compressione).</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Black and White</source>
+            <translation>Bianco e nero</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Converts the pages into black and white, the file becomes much smaller (suitable for scanned documents).</source>
+            <translation>Converte le pagine in bianco e nero, il file diventa molto più piccolo (adatto ai documenti scansionati).</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Protection</source>
+            <translation>Protezione</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Redact</source>
+            <translation>Oscura</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Marks the parts of the pages, which will be removed permanently (blacked out), then creates the redacted document.</source>
+            <translation>Segna le parti delle pagine da eliminare definitivamente (annerite), poi crea il documento oscurato.</translation>
+        </message>
+        <message>
+            <location line="+3" />
+            <source>Remove Hidden Data</source>
+            <translation>Rimuovi dati nascosti</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Removes the hidden information from the document: metadata, scripts, attachments, comments.</source>
+            <translation>Rimuove dal documento le informazioni nascoste: metadati, script, allegati, commenti.</translation>
+        </message>
+        <message>
+            <location line="+3" />
+            <source>Read Aloud</source>
+            <translation>Lettura ad alta voce</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Audio Book</source>
+            <translation>Audiolibro</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Creates an audio book from the text of the document.</source>
+            <translation>Crea un audiolibro dal testo del documento.</translation>
+        </message>
+        <message>
+            <location line="+7" />
+            <source>Advanced</source>
+            <translation>Avanzate</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Object Inspector</source>
+            <translation>Ispettore oggetti</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the internal objects of the document (for experts).</source>
+            <translation>Mostra gli oggetti interni del documento (per esperti).</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Object Statistics</source>
+            <translation>Statistiche oggetti</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the statistics of the internal objects of the document (for experts).</source>
+            <translation>Mostra le statistiche degli oggetti interni del documento (per esperti).</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Rendering Errors</source>
+            <translation>Errori di rendering</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Lists the errors found while the pages were displayed.</source>
+            <translation>Elenca gli errori trovati durante la visualizzazione delle pagine.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Output Preview</source>
+            <translation>Anteprima di stampa</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the separations of the colors for the printing (for the printing house).</source>
+            <translation>Mostra le separazioni dei colori per la stampa (per la tipografia).</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Ink Coverage</source>
+            <translation>Copertura inchiostro</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Computes the coverage of the inks of the pages (for the printing house).</source>
+            <translation>Calcola la copertura d&apos;inchiostro delle pagine (per la tipografia).</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Soft Proofing</source>
+            <translation>Prova colore</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Simulates the colors of the print on the screen.</source>
+            <translation>Simula sullo schermo i colori della stampa.</translation>
+        </message>
+        <message>
+            <location line="+3" />
+            <source>Settings</source>
+            <translation>Impostazioni</translation>
+        </message>
+        <message>
+            <location line="+3" />
+            <source>Reset Settings</source>
+            <translation>Ripristina impostazioni</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Restores the original settings of the application.</source>
+            <translation>Ripristina le impostazioni originali dell&apos;applicazione.</translation>
+        </message>
+        <message>
+            <location line="+5" />
+            <source>View</source>
+            <translation>Visualizza</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Zoom</source>
+            <translation>Zoom</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Whole Page</source>
+            <translation>Pagina intera</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Zooms the view, so the whole page is visible.</source>
+            <translation>Adatta lo zoom in modo che sia visibile la pagina intera.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Page Width</source>
+            <translation>Larghezza pagina</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Zooms the view, so the page fills the width of the window.</source>
+            <translation>Adatta lo zoom in modo che la pagina occupi la larghezza della finestra.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Zoom In</source>
+            <translation>Ingrandisci</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Enlarges the view of the page.</source>
+            <translation>Ingrandisce la visualizzazione della pagina.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Zoom Out</source>
+            <translation>Riduci</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Reduces the view of the page.</source>
+            <translation>Riduce la visualizzazione della pagina.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Page Height</source>
+            <translation>Altezza pagina</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Zooms the view, so the page fills the height of the window.</source>
+            <translation>Adatta lo zoom in modo che la pagina occupi l&apos;altezza della finestra.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Magnifier</source>
+            <translation>Lente</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows a magnified part of the page under the mouse.</source>
+            <translation>Mostra ingrandita la parte della pagina sotto il mouse.</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Page Layout</source>
+            <translation>Layout pagina</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Single Page</source>
+            <translation>Pagina singola</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows one page at a time.</source>
+            <translation>Mostra una pagina alla volta.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Continuous</source>
+            <translation>Continua</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the pages one below another, scrolling continuously.</source>
+            <translation>Mostra le pagine una sotto l&apos;altra, con scorrimento continuo.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Two Pages</source>
+            <translation>Due pagine</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows two pages side by side.</source>
+            <translation>Mostra due pagine affiancate.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Two Columns</source>
+            <translation>Due colonne</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the pages in two columns, scrolling continuously.</source>
+            <translation>Mostra le pagine su due colonne, con scorrimento continuo.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>First Page on Right</source>
+            <translation>Prima pagina a destra</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>In the two page layouts, the first page is shown on the right side (as a book).</source>
+            <translation>Nei layout a due pagine, la prima pagina è mostrata a destra (come in un libro).</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Colors</source>
+            <translation>Colori</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Inverted</source>
+            <translation>Invertiti</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the pages with inverted colors (light text on a dark background).</source>
+            <translation>Mostra le pagine con i colori invertiti (testo chiaro su sfondo scuro).</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Grayscale</source>
+            <translation>Scala di grigi</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the pages in shades of gray.</source>
+            <translation>Mostra le pagine in scala di grigi.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>High Contrast</source>
+            <translation>Alto contrasto</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the pages with a high contrast, for a better readability.</source>
+            <translation>Mostra le pagine ad alto contrasto, per una migliore leggibilità.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Monochromatic</source>
+            <translation>Monocromatico</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the pages in black and white only.</source>
+            <translation>Mostra le pagine solo in bianco e nero.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Custom Colors</source>
+            <translation>Colori personalizzati</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the pages with the colors set in the options.</source>
+            <translation>Mostra le pagine con i colori impostati nelle opzioni.</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Show</source>
+            <translation>Mostra</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Sidebar</source>
+            <translation>Barra laterale</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Full Screen</source>
+            <translation>Schermo intero</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the document on the whole screen. Press Esc to return.</source>
+            <translation>Mostra il documento a schermo intero. Premi Esc per tornare.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Shows or hides the comments, notes and highlights of the pages.</source>
+            <translation>Mostra o nasconde i commenti, le note e le evidenziazioni delle pagine.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Display Quality</source>
+            <translation>Qualità di visualizzazione</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Settings of the quality of the display of the pages (smoothing of the text and of the images).</source>
+            <translation>Impostazioni della qualità di visualizzazione delle pagine (smussatura del testo e delle immagini).</translation>
+        </message>
+        <message>
+            <location line="+8" />
+            <location line="+2" />
+            <source>Help</source>
+            <translation>Guida</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>About</source>
+            <translation>Informazioni su</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Shows the version of the application, the authors and the licenses.</source>
+            <translation>Mostra la versione dell&apos;applicazione, gli autori e le licenze.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Source Code</source>
+            <translation>Codice sorgente</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Opens the web page with the source code of the application.</source>
+            <translation>Apre la pagina web con il codice sorgente dell&apos;applicazione.</translation>
+        </message>
+        <message>
+            <location line="+12" />
+            <location line="+5" />
+            <source>Font</source>
+            <translation>Carattere</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Font of the text. It is used for the new text boxes and for the selected text boxes.</source>
+            <translation>Tipo di carattere del testo. Si applica alle nuove caselle di testo e a quelle selezionate.</translation>
+        </message>
+        <message>
+            <location line="+12" />
+            <source>Font Size</source>
+            <translation>Dimensione carattere</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Size of the text in points.</source>
+            <translation>Dimensione del testo in punti.</translation>
+        </message>
+        <message>
+            <location line="+5" />
+            <source>B</source>
+            <comment>Letter on the Bold button</comment>
+            <translation>G</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Bold</source>
+            <translation>Grassetto</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Writes the text in bold.</source>
+            <translation>Scrive il testo in grassetto.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>I</source>
+            <comment>Letter on the Italic button</comment>
+            <translation>C</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Italic</source>
+            <translation>Corsivo</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Writes the text in italic.</source>
+            <translation>Scrive il testo in corsivo.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>U</source>
+            <comment>Letter on the Underline button</comment>
+            <translation>S</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Underlines the text.</source>
+            <translation>Sottolinea il testo.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <location line="+181" />
+            <source>Font Color</source>
+            <translation>Colore carattere</translation>
+        </message>
+        <message>
+            <location line="-181" />
+            <source>Changes the color of the text.</source>
+            <translation>Cambia il colore del testo.</translation>
+        </message>
+        <message>
+            <location line="+5" />
+            <source>For text boxes</source>
+            <translation>Per le caselle di testo</translation>
+        </message>
+        <message>
+            <location line="+19" />
+            <source>Paragraph</source>
+            <translation>Paragrafo</translation>
+        </message>
+        <message>
+            <location line="+2" />
+            <source>Align Left</source>
+            <translation>Allinea a sinistra</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Aligns the text to the left edge of the text box.</source>
+            <translation>Allinea il testo al bordo sinistro della casella di testo.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Center</source>
+            <translation>Centra</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Centers the text in the text box.</source>
+            <translation>Centra il testo nella casella di testo.</translation>
+        </message>
+        <message>
+            <location line="+1" />
+            <source>Align Right</source>
+            <translation>Allinea a destra</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Aligns the text to the right edge of the text box.</source>
+            <translation>Allinea il testo al bordo destro della casella di testo.</translation>
+        </message>
     </context>
     <context>
         <name>pdfviewer::PDFEncryptionSettingsDialog</name>

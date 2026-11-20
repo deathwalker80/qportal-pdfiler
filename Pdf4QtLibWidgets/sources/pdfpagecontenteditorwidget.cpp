@@ -308,4 +308,39 @@ void PDFPageContentEditorWidget::loadStyleFromElement(const PDFPageContentElemen
     m_settingsWidget->loadFromElement(element, false);
 }
 
+void PDFPageContentEditorWidget::changeFont(const QFont& font)
+{
+    m_settingsWidget->setFont(font, false);
+    Q_EMIT selectedElementsFontChangeRequested(font);
+}
+
+void PDFPageContentEditorWidget::changeAlignment(Qt::Alignment alignment)
+{
+    m_settingsWidget->setFontAlignment(alignment, false);
+    Q_EMIT selectedElementsAlignmentChangeRequested(alignment);
+}
+
+void PDFPageContentEditorWidget::changeTextColor(const QColor& color)
+{
+    QPen pen = m_settingsWidget->getPen();
+    pen.setColor(color);
+    m_settingsWidget->setPen(pen, false);
+    Q_EMIT selectedElementsTextColorChangeRequested(color);
+}
+
+QFont PDFPageContentEditorWidget::getFont() const
+{
+    return m_settingsWidget->getFont();
+}
+
+Qt::Alignment PDFPageContentEditorWidget::getAlignment() const
+{
+    return m_settingsWidget->getAlignment();
+}
+
+QColor PDFPageContentEditorWidget::getTextColor() const
+{
+    return m_settingsWidget->getPen().color();
+}
+
 }   // namespace pdf

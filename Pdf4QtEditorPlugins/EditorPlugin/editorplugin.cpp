@@ -712,6 +712,46 @@ void EditorPlugin::onTextAngleChanged(pdf::PDFReal angle)
     }
 }
 
+void EditorPlugin::onSelectedElementsFontChangeRequested(const QFont& font)
+{
+    modifySelectedTextBoxes([&font](pdf::PDFPageContentElementTextBox* textBox) { textBox->setFont(font); });
+}
+
+void EditorPlugin::onSelectedElementsAlignmentChangeRequested(Qt::Alignment alignment)
+{
+    modifySelectedTextBoxes([alignment](pdf::PDFPageContentElementTextBox* textBox) { textBox->setAlignment(alignment); });
+}
+
+void EditorPlugin::onSelectedElementsTextColorChangeRequested(const QColor& color)
+{
+    modifySelectedTextBoxes([&color](pdf::PDFPageContentElementTextBox* textBox)
+    {
+        QPen pen = textBox->getPen();
+        pen.setColor(color);
+        textBox->setPen(pen);
+    });
+}
+
+void EditorPlugin::modifySelectedTextBoxes(const std::function<void(pdf::PDFPageContentElementTextBox*)>& modifier)
+{
+    std::vector<pdf::PDFPageContentElement*> modifiedElements;
+
+    for (pdf::PDFInteger elementId : m_scene.getSelectedElementIds())
+    {
+        const pdf::PDFPageContentElement* element = m_scene.getElementById(elementId);
+        if (!element || !element->asElementTextBox())
+        {
+            continue;
+        }
+
+        std::unique_ptr<pdf::PDFPageContentElement> modifiedElement(element->clone());
+        modifier(dynamic_cast<pdf::PDFPageContentElementTextBox*>(modifiedElement.get()));
+        modifiedElements.push_back(modifiedElement.release());
+    }
+
+    m_scene.replaceElements(std::move(modifiedElements));
+}
+
 void EditorPlugin::setActive(bool active)
 {
     if (m_scene.isActive() != active)
@@ -981,6 +1021,9 @@ void EditorPlugin::updateDockWidget()
     connect(m_editorWidget, &pdf::PDFPageContentEditorWidget::fontChanged, this, &EditorPlugin::onFontChanged);
     connect(m_editorWidget, &pdf::PDFPageContentEditorWidget::alignmentChanged, this, &EditorPlugin::onAlignmentChanged);
     connect(m_editorWidget, &pdf::PDFPageContentEditorWidget::textAngleChanged, this, &EditorPlugin::onTextAngleChanged);
+    connect(m_editorWidget, &pdf::PDFPageContentEditorWidget::selectedElementsFontChangeRequested, this, &EditorPlugin::onSelectedElementsFontChangeRequested);
+    connect(m_editorWidget, &pdf::PDFPageContentEditorWidget::selectedElementsAlignmentChangeRequested, this, &EditorPlugin::onSelectedElementsAlignmentChangeRequested);
+    connect(m_editorWidget, &pdf::PDFPageContentEditorWidget::selectedElementsTextColorChangeRequested, this, &EditorPlugin::onSelectedElementsTextColorChangeRequested);
 }
 
 void EditorPlugin::updateEditedPages()

@@ -76,6 +76,17 @@ public:
     /// \param element Element
     void loadStyleFromElement(const PDFPageContentElement* element);
 
+    /// Changes the style from outside of the tool box (for example, from the ribbon
+    /// of the main window). The style is used for the new elements, and a request
+    /// to apply the style to the selected elements is emitted.
+    void changeFont(const QFont& font);
+    void changeAlignment(Qt::Alignment alignment);
+    void changeTextColor(const QColor& color);
+
+    QFont getFont() const;
+    Qt::Alignment getAlignment() const;
+    QColor getTextColor() const;
+
 signals:
     void operationTriggered(int operation);
     void itemSelectionChangedByUser();
@@ -86,6 +97,10 @@ signals:
     void alignmentChanged(Qt::Alignment alignment);
     void textAngleChanged(pdf::PDFReal angle);
     void editElementRequest(pdf::PDFInteger elementId);
+
+    void selectedElementsFontChangeRequested(const QFont& font);
+    void selectedElementsAlignmentChangeRequested(Qt::Alignment alignment);
+    void selectedElementsTextColorChangeRequested(const QColor& color);
 
 private:
     void onActionTriggerRequest(QObject* actionObject);

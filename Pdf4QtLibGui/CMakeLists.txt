@@ -51,6 +51,10 @@ add_library(Pdf4QtLibGui SHARED
     pdfundoredomanager.h
     pdfeditormainwindow.cpp
     pdfeditormainwindow.h
+    pdfeditorribbon.cpp
+    pdfeditorribbon.h
+    pdfribbon.cpp
+    pdfribbon.h
     pdfviewermainwindow.cpp
     pdfviewermainwindow.h
     pdfviewersettings.cpp

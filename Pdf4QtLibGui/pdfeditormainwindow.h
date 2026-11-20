@@ -53,6 +53,8 @@ class QLabel;
 class QSpinBox;
 class QSettings;
 class QDoubleSpinBox;
+class QToolBar;
+class QToolButton;
 
 namespace Ui
 {
@@ -91,6 +93,7 @@ public:
     virtual void setDocument(const pdf::PDFModifiedDocument& document) override;
     virtual void adjustToolbar(QToolBar* toolbar) override final;
     virtual pdf::PDFTextSelection getSelectedText() const override;
+    virtual QMenu* createPopupMenu() override;
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent* event) override;
@@ -110,6 +113,10 @@ private:
 
     void updateDeveloperMenu();
 
+    void createRibbon(QAction* advancedFindAction, QAction* outlineNewItemAction, QWidget* searchWidget);
+    void hideClassicToolBars();
+    QToolButton* createStatusBarButton(QAction* action);
+
     QIcon createStickyNoteIcon(QString key) const;
 
     Ui::PDFEditorMainWindow* ui;
@@ -123,6 +130,7 @@ private:
     QSpinBox* m_pageNumberSpinBox;
     QLabel* m_pageNumberLabel;
     QDoubleSpinBox* m_pageZoomSpinBox;
+    QToolBar* m_ribbonToolBar = nullptr;
     bool m_isLoadingUI;
     pdf::PDFProgress* m_progress;
     PDFWinTaskBarProgress* m_progressTaskbarIndicator;
