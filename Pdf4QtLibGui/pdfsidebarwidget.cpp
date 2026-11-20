@@ -41,6 +41,9 @@
 #include "pdfwidgetannotation.h"
 
 #include <QMenu>
+#include <QDockWidget>
+#include <QMainWindow>
+#include <QApplication>
 #include <QAction>
 #include <QFileDialog>
 #include <QStandardPaths>
@@ -225,6 +228,7 @@ PDFSidebarWidget::PDFSidebarWidget(pdf::PDFDrawWidgetProxy* proxy,
         }
     }
 
+    updateStripStyleSheet();
     selectPage(Invalid);
     updateButtons();
     updatePageButtonIconSize();
@@ -388,11 +392,7 @@ void PDFSidebarWidget::selectPage(Page page)
         QToolButton* pushButton = pageInfo.second.button;
         if (pushButton)
         {
-            pushButton->setChecked(pageInfo.first == page);
-
-            QFont font = pushButton->font();
-            font.setBold(pageInfo.first == page);
-            pushButton->setFont(font);
+            pushButton->setChecked(pageInfo.first == page && !m_isPanelCollapsed);
         }
 
         if (pageInfo.first == page)
@@ -497,18 +497,19 @@ void PDFSidebarWidget::updateButtons()
 
 void PDFSidebarWidget::updatePageButtonIconSize()
 {
-    const QSize baseIconSize(64, 64);
-    const int baseButtonWidth = 96;
+    // Narrow strip of small buttons with their names, the panel is opened beside it
+    const QSize baseIconSize = pdf::PDFWidgetUtils::scaleDPI(this, QSize(26, 26));
+    const int baseButtonWidth = pdf::PDFWidgetUtils::scaleDPI_x(this, 82);
 
     qreal scale = 1.0;
     switch (m_settings->getSettings().m_sidebarButtonIconSize)
     {
         case PDFViewerSettings::SidebarButtonIconSizeSmall:
-            scale = 0.4;
+            scale = 0.55;
             break;
 
         case PDFViewerSettings::SidebarButtonIconSizeMedium:
-            scale = 0.7;
+            scale = 0.9;
             break;
 
         case PDFViewerSettings::SidebarButtonIconSizeLarge:
@@ -516,14 +517,14 @@ void PDFSidebarWidget::updatePageButtonIconSize()
             break;
 
         case PDFViewerSettings::SidebarButtonIconSizeVeryLarge:
-            scale = 1.25;
+            scale = 1.3;
             break;
 
         default:
             break;
     }
 
-    const bool showText = m_settings->getSettings().m_sidebarButtonIconSize >= PDFViewerSettings::SidebarButtonIconSizeLarge;
+    const bool showText = m_settings->getSettings().m_sidebarButtonIconSize >= PDFViewerSettings::SidebarButtonIconSizeMedium;
     const Qt::ToolButtonStyle buttonStyle = showText ? Qt::ToolButtonTextUnderIcon : Qt::ToolButtonIconOnly;
 
     QSize iconSize(qRound(baseIconSize.width() * scale),
@@ -546,7 +547,13 @@ void PDFSidebarWidget::updatePageButtonIconSize()
             pageInfo.second.button->setIconSize(iconSize);
             pageInfo.second.button->setFixedWidth(buttonWidth);
             pageInfo.second.button->setToolButtonStyle(buttonStyle);
+            pageInfo.second.button->setAutoRaise(true);
         }
+    }
+
+    if (m_isPanelCollapsed)
+    {
+        setMaximumWidth(buttonWidth);
     }
 }
 
@@ -934,10 +941,81 @@ void PDFSidebarWidget::onPageButtonClicked()
         if (pageInfo.second.button == pushButton)
         {
             Q_ASSERT(!isEmpty(pageInfo.first));
+
+            // A click on the button of the opened panel closes the panel,
+            // only the strip of the buttons stays visible
+            const bool closePanel = pageInfo.first == m_currentPage && !m_isPanelCollapsed;
             selectPage(pageInfo.first);
+            setPanelCollapsed(closePanel);
             break;
         }
     }
+}
+
+void PDFSidebarWidget::setPanelCollapsed(bool collapsed)
+{
+    QDockWidget* dockWidget = qobject_cast<QDockWidget*>(parentWidget());
+    QMainWindow* mainWindow = dockWidget ? qobject_cast<QMainWindow*>(dockWidget->parentWidget()) : nullptr;
+
+    if (collapsed == m_isPanelCollapsed)
+    {
+        return;
+    }
+
+    m_isPanelCollapsed = collapsed;
+
+    if (collapsed)
+    {
+        m_expandedWidth = width();
+        ui->stackedWidget->hide();
+        setMaximumWidth(ui->scrollArea->width());
+
+        for (const auto& pageInfo : m_pageInfo)
+        {
+            if (pageInfo.second.button)
+            {
+                pageInfo.second.button->setChecked(false);
+            }
+        }
+    }
+    else
+    {
+        setMaximumWidth(QWIDGETSIZE_MAX);
+        ui->stackedWidget->show();
+
+        if (QToolButton* button = m_pageInfo[m_currentPage].button)
+        {
+            button->setChecked(true);
+        }
+    }
+
+    if (mainWindow && dockWidget->isVisible() && !dockWidget->isFloating())
+    {
+        const int dockWidth = collapsed ? ui->scrollArea->width() : qMax(m_expandedWidth, pdf::PDFWidgetUtils::scaleDPI_x(this, 320));
+        mainWindow->resizeDocks({ dockWidget }, { dockWidth }, Qt::Horizontal);
+    }
+}
+
+void PDFSidebarWidget::updateStripStyleSheet()
+{
+    // Colors are computed from the palette, so the strip follows the light and the dark theme
+    const QPalette palette = QApplication::palette(this);
+    const QColor window = palette.color(QPalette::Window);
+    const QColor text = palette.color(QPalette::WindowText);
+    const QColor highlight = palette.color(QPalette::Highlight);
+
+    auto mix = [](const QColor& first, const QColor& second, qreal ratio)
+    {
+        return QColor::fromRgbF(first.redF() * (1.0 - ratio) + second.redF() * ratio,
+                                first.greenF() * (1.0 - ratio) + second.greenF() * ratio,
+                                first.blueF() * (1.0 - ratio) + second.blueF() * ratio).name();
+    };
+
+    ui->scrollArea->setStyleSheet(QString("QScrollArea { border: none; border-right: 1px solid %1; }"
+                                          "QToolButton { border: none; border-left: 3px solid transparent; border-radius: 0px; padding: 6px 0px 4px 0px; font-size: 8pt; }"
+                                          "QToolButton:hover { background: %2; }"
+                                          "QToolButton:checked { background: %3; border-left: 3px solid %4; }")
+                                  .arg(mix(window, text, 0.22), mix(window, text, 0.10), mix(window, highlight, 0.22), highlight.name()));
 }
 
 void PDFSidebarWidget::onOutlineItemClicked(const QModelIndex& index)

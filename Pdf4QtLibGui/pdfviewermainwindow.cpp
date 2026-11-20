@@ -237,6 +237,11 @@ PDFViewerMainWindow::PDFViewerMainWindow(QWidget* parent) :
     m_sidebarDockWidget->setObjectName("SidebarDockWidget");
     m_sidebarDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     m_sidebarDockWidget->setWidget(m_sidebarWidget);
+
+    // The sidebar is a fixed strip of buttons with a panel (as in the office applications),
+    // it has no title bar - it is shown and hidden by the Sidebar button of the ribbon
+    m_sidebarDockWidget->setTitleBarWidget(new QWidget(m_sidebarDockWidget));
+    m_sidebarDockWidget->setFeatures(QDockWidget::DockWidgetClosable);
     addDockWidget(Qt::LeftDockWidgetArea, m_sidebarDockWidget);
     m_sidebarDockWidget->hide();
     connect(m_sidebarWidget, &PDFSidebarWidget::actionTriggered, m_programController, &PDFProgramController::onActionTriggered);

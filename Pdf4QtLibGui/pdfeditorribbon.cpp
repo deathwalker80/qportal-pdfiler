@@ -265,6 +265,7 @@ void PDFEditorRibbon::createFilePage()
     PDFRibbonPage* page = m_ribbon->addPage(tr("File"));
 
     PDFRibbonGroup* documentGroup = page->addGroup(tr("Document"));
+    documentGroup->addLargeAction(findAction("actionNewDocument"), tr("New"), tr("Creates a new empty document (A4). The file of the document is chosen first."));
     documentGroup->addLargeAction(getAction(PDFActionManager::Open), tr("Open"), tr("Opens a PDF document from the computer or from a network folder."));
 
     QList<QAction*> recentFileActions;
@@ -507,6 +508,11 @@ void PDFEditorRibbon::createPagePage()
 void PDFEditorRibbon::createToolsPage()
 {
     PDFRibbonPage* page = m_ribbon->addPage(tr("Tools"));
+
+    PDFRibbonGroup* filesGroup = page->addGroup(tr("PDF Files"));
+    filesGroup->addLargeAction(findAction("actionPdfToolCreate"), tr("Create PDF from Files"), tr("Creates one PDF document from more files: Word, Excel, PowerPoint, images, text. The pages can be sorted, rotated and removed before the document is saved."));
+    filesGroup->addLargeAction(findAction("actionPdfToolMerge"), tr("Merge PDF"), tr("Joins more PDF documents into one. The pages can be sorted, rotated and removed."));
+    filesGroup->addLargeAction(findAction("actionPdfToolSplit"), tr("Split PDF"), tr("Extracts pages from a document or divides it into more files."));
 
     PDFRibbonGroup* ocrGroup = page->addGroup(tr("Text Recognition"));
     ocrGroup->addLargeAction(getAction(PDFActionManager::RecognizeText), tr("Recognize Text (OCR)"), tr("Recognizes the text of the scanned pages, the text can be then searched, selected and copied."));

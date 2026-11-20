@@ -104,6 +104,9 @@ public:
     /// Selects current page
     void selectPage(Page page);
 
+    /// Hides or shows the panel beside the strip of the buttons (the strip stays visible)
+    void setPanelCollapsed(bool collapsed);
+
     /// Returns list of valid pages (nonempty pages)
     std::vector<Page> getValidPages() const;
 
@@ -135,6 +138,7 @@ private:
     void updateGUI(Page preferredPage);
     void updateButtons();
     void updatePageButtonIconSize();
+    void updateStripStyleSheet();
     void updateSignatures(const std::vector<pdf::PDFSignatureVerificationResult>& signatures);
     void updateNotes();
 
@@ -243,6 +247,8 @@ private:
     std::vector<pdf::PDFCertificateInfo> m_certificateInfos;
     std::vector<std::pair<pdf::PDFObjectReference, pdf::PDFInteger>> m_markupAnnotations;
     Page m_currentPage = Invalid;
+    bool m_isPanelCollapsed = false;
+    int m_expandedWidth = 0;
     bool m_bookmarkChangeInProgress = false;
     bool m_notesSelectionChangeInProgress = false;
 

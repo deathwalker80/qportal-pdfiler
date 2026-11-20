@@ -27,6 +27,8 @@ add_executable(Pdf4QtPageMaster
     assembleoutputsettingsdialog.h
     croppagesdialog.cpp
     croppagesdialog.h
+    documentconverter.cpp
+    documentconverter.h
     imageoptimizationsettingsdialog.cpp
     imageoptimizationsettingsdialog.h
     itempropertiesdialog.cpp

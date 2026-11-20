@@ -28,6 +28,7 @@
 #include "mainwindow.h"
 
 #include <QApplication>
+#include <QTimer>
 #include <QCommandLineParser>
 #include <QMenu>
 #include <QProxyStyle>
@@ -88,7 +89,9 @@ int main(int argc, char *argv[])
     parser.addOption(configPath);
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.addPositionalArgument("file", "The PDF file to open.");
+    QCommandLineOption addFiles("add-files", "Show the dialog for adding the files at the start.");
+    parser.addOption(addFiles);
+    parser.addPositionalArgument("file", "The files to add (PDF documents, images, office documents).", "[file...]");
     parser.process(application);
     pdf::PDFSettings::applyCommandLineSettingsPath(parser);
 
@@ -108,6 +111,18 @@ int main(int argc, char *argv[])
 
     pdfpagemaster::MainWindow mainWindow(nullptr);
     mainWindow.show();
+
+    const QStringList fileNames = parser.positionalArguments();
+    const bool showAddFilesDialog = parser.isSet(addFiles);
+    QTimer::singleShot(0, &mainWindow, [&mainWindow, fileNames, showAddFilesDialog]()
+    {
+        mainWindow.addFiles(fileNames);
+
+        if (showAddFilesDialog)
+        {
+            mainWindow.showAddFilesDialog();
+        }
+    });
 
     return application.exec();
 }

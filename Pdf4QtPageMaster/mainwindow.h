@@ -80,6 +80,13 @@ public:
     explicit MainWindow(QWidget* parent);
     virtual ~MainWindow() override;
 
+    /// Adds the files to the workspace: PDF documents, images, and documents of
+    /// other formats (office documents, text), which are converted to PDF first
+    void addFiles(const QStringList& fileNames);
+
+    /// Shows the dialog for the selection of the files to be added
+    void showAddFilesDialog() { on_actionAddDocuments_triggered(); }
+
     virtual void dragEnterEvent(QDragEnterEvent* event) override;
     virtual void dropEvent(QDropEvent* event) override;
 

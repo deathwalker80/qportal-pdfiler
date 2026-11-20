@@ -71,6 +71,7 @@ namespace pdfviewer
 {
 class PDFSidebarWidget;
 class PDFAdvancedFindWidget;
+class PDFWelcomePage;
 
 class PDF4QTLIBGUILIBSHARED_EXPORT PDFEditorMainWindow : public QMainWindow, public IMainWindow
 {
@@ -126,6 +127,7 @@ private:
     QSpinBox* m_pageNumberSpinBox;
     QLabel* m_pageNumberLabel;
     QDoubleSpinBox* m_pageZoomSpinBox;
+    PDFWelcomePage* m_welcomePage = nullptr;
     bool m_isLoadingUI;
     pdf::PDFProgress* m_progress;
     PDFWinTaskBarProgress* m_progressTaskbarIndicator;

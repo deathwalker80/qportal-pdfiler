@@ -41,7 +41,10 @@
 #include "pdfprogress.h"
 #include "pdfutils.h"
 
+#include "documentconverter.h"
+
 #include <QFileDialog>
+#include <QApplication>
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QBuffer>
@@ -1246,17 +1249,48 @@ void MainWindow::on_actionClose_triggered()
 
 void MainWindow::on_actionAddDocuments_triggered()
 {
-    QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("Select PDF document(s)"), m_settings.directory, tr("PDF document (*.pdf)"));
-    if (!fileNames.isEmpty())
+    QStringList imageSuffixes;
+    for (const QByteArray& format : QImageReader::supportedImageFormats())
     {
-        for (const QString& fileName : fileNames)
+        imageSuffixes << QString::fromLatin1(format).toLower();
+    }
+
+    const QStringList documentSuffixes = DocumentConverter::getConvertibleSuffixes();
+    const QString allFilter = tr("All supported files (*.pdf *.%1 *.%2)").arg(documentSuffixes.join(" *."), imageSuffixes.join(" *."));
+    const QString pdfFilter = tr("PDF document (*.pdf)");
+    const QString documentFilter = tr("Office documents and text (*.%1)").arg(documentSuffixes.join(" *."));
+    const QString imageFilter = tr("Images (*.%1)").arg(imageSuffixes.join(" *."));
+
+    QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("Select files"), m_settings.directory, QStringList({ allFilter, pdfFilter, documentFilter, imageFilter }).join(";;"));
+    addFiles(fileNames);
+}
+
+void MainWindow::addFiles(const QStringList& fileNames)
+{
+    for (const QString& fileName : fileNames)
+    {
+        const QFileInfo fileInfo(fileName);
+        const QString suffix = fileInfo.suffix().toLower();
+
+        if (suffix == QLatin1String("pdf") || DocumentConverter::isConvertible(suffix))
         {
             if (!insertDocument(fileName, QModelIndex()))
             {
                 break;
             }
         }
+        else if (m_model->insertImage(fileName, QModelIndex()) != -1)
+        {
+            m_settings.directory = fileInfo.absolutePath();
+            addRecentSourceFile(fileName);
+        }
+        else
+        {
+            QMessageBox::warning(this, tr("Add Files"), tr("File '%1' is not a supported document or image.").arg(fileInfo.fileName()));
+        }
     }
+
+    updateActions();
 }
 
 void MainWindow::onMappedActionTriggered(int actionId)
@@ -1434,7 +1468,7 @@ void MainWindow::onRecentSourceFileTriggered()
     }
 
     const QString suffix = fileInfo.suffix().toLower();
-    if (suffix == QLatin1String("pdf"))
+    if (suffix == QLatin1String("pdf") || DocumentConverter::isConvertible(suffix))
     {
         insertDocument(fileName, QModelIndex());
         return;
@@ -1859,7 +1893,7 @@ bool MainWindow::isSupportedWorkspaceDropUrl(const QUrl& url) const
 
     const QFileInfo fileInfo(url.toLocalFile());
     const QString suffix = fileInfo.suffix().toLower();
-    if (suffix == QLatin1String("pdf"))
+    if (suffix == QLatin1String("pdf") || DocumentConverter::isConvertible(suffix))
     {
         return true;
     }
@@ -2051,7 +2085,7 @@ bool MainWindow::dropWorkspaceExternalMimeData(const QMimeData* mimeData, int in
         const QString fileName = url.toLocalFile();
         const QString suffix = QFileInfo(fileName).suffix().toLower();
         bool ok = false;
-        if (suffix == QLatin1String("pdf"))
+        if (suffix == QLatin1String("pdf") || DocumentConverter::isConvertible(suffix))
         {
             ok = insertDocument(fileName, insertSourceRow);
         }
@@ -2107,6 +2141,31 @@ bool MainWindow::insertDocument(const QString& fileName, int insertRow, const st
         return false;
     }
 
+    if (DocumentConverter::isConvertible(QFileInfo(fileName).suffix()))
+    {
+        // Documents of other formats (office documents, text) are converted to PDF first
+        statusBar()->showMessage(tr("Converting '%1' to PDF...").arg(QFileInfo(fileName).fileName()));
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+        QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+
+        QString conversionError;
+        const QString convertedFileName = DocumentConverter::convertToPdf(fileName, &conversionError);
+
+        QApplication::restoreOverrideCursor();
+        statusBar()->clearMessage();
+
+        if (convertedFileName.isEmpty())
+        {
+            QMessageBox::critical(this, tr("Error"), conversionError);
+            return false;
+        }
+
+        const QString directory = QFileInfo(fileName).absolutePath();
+        const bool isConvertedDocumentInserted = insertDocument(convertedFileName, insertRow, pages);
+        m_settings.directory = directory;
+        return isConvertedDocumentInserted;
+    }
+
     bool isDocumentInserted = true;
 
     QFileInfo fileInfo(fileName);
@@ -2156,8 +2215,9 @@ bool MainWindow::insertDocument(const QString& fileName, int insertRow, const st
         Q_ASSERT(false);
     }
 
-    if (isDocumentInserted)
+    if (isDocumentInserted && !fileName.startsWith(QDir::tempPath()))
     {
+        // Converted documents are temporary files, they are not offered as recent files
         addRecentSourceFile(fileName);
     }
 

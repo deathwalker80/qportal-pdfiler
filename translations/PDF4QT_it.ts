@@ -19470,6 +19470,54 @@ li.checked::marker { content: "\2612"; }
         </message>
     </context>
     <context>
+        <name>pdfpagemaster::DocumentConverter</name>
+        <message>
+            <location line="+0" />
+            <source>File &apos;%1&apos; cannot be converted to PDF.</source>
+            <translation>Il file &apos;%1&apos; non può essere convertito in PDF.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>File &apos;%1&apos; cannot be converted to PDF. The conversion needs Microsoft Office or LibreOffice installed on this computer.</source>
+            <translation>Il file &apos;%1&apos; non può essere convertito in PDF. Per la conversione serve Microsoft Office o LibreOffice installato su questo computer.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>File &apos;%1&apos; was not converted to PDF (no output was created).</source>
+            <translation>Il file &apos;%1&apos; non è stato convertito in PDF (nessun file creato).</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>File &apos;%1&apos; cannot be read. %2</source>
+            <translation>Impossibile leggere il file &apos;%1&apos;. %2</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Microsoft Office: %1</source>
+            <translation>Microsoft Office: %1</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Microsoft Office: the conversion took too long and was stopped.</source>
+            <translation>Microsoft Office: la conversione ha richiesto troppo tempo ed è stata interrotta.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>LibreOffice: not installed.</source>
+            <translation>LibreOffice: non installato.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>LibreOffice: %1</source>
+            <translation>LibreOffice: %1</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>LibreOffice: the conversion took too long and was stopped.</source>
+            <translation>LibreOffice: la conversione ha richiesto troppo tempo ed è stata interrotta.</translation>
+        </message>
+    </context>
+    <context>
         <name>pdfpagemaster::ImageOptimizationSettingsDialog</name>
         <message>
             <location filename="../Pdf4QtPageMaster/imageoptimizationsettingsdialog.cpp" line="+81" />
@@ -20371,6 +20419,36 @@ li.checked::marker { content: "\2612"; }
             <location line="+66" />
             <source>Select PDF document</source>
             <translation>Seleziona documento PDF</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>All supported files (*.pdf *.%1 *.%2)</source>
+            <translation>Tutti i file supportati (*.pdf *.%1 *.%2)</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Office documents and text (*.%1)</source>
+            <translation>Documenti Office e testo (*.%1)</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Select files</source>
+            <translation>Seleziona i file</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Add Files</source>
+            <translation>Aggiungi file</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>File &apos;%1&apos; is not a supported document or image.</source>
+            <translation>Il file &apos;%1&apos; non è un documento o un&apos;immagine supportati.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Converting &apos;%1&apos; to PDF...</source>
+            <translation>Conversione di &apos;%1&apos; in PDF...</translation>
         </message>
     </context>
     <context>
@@ -24624,6 +24702,51 @@ Fai doppio clic sulla riga per aprire il testo della licenza.</translation>
             <location filename="../Pdf4QtLibGui/pdfeditorribbon.cpp" line="+0" />
             <source>Ribbon</source>
             <translation>Barra multifunzione</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>New</source>
+            <translation>Nuovo</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Creates a new empty document (A4). The file of the document is chosen first.</source>
+            <translation>Crea un nuovo documento vuoto (A4). Prima si sceglie dove salvare il file.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>PDF Files</source>
+            <translation>File PDF</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Create PDF from Files</source>
+            <translation>Crea PDF da file</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Creates one PDF document from more files: Word, Excel, PowerPoint, images, text. The pages can be sorted, rotated and removed before the document is saved.</source>
+            <translation>Crea un unico PDF da più file: Word, Excel, PowerPoint, immagini, testo. Prima di salvare si possono ordinare, ruotare ed eliminare le pagine.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Merge PDF</source>
+            <translation>Unisci PDF</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Joins more PDF documents into one. The pages can be sorted, rotated and removed.</source>
+            <translation>Unisce più documenti PDF in uno solo. Le pagine si possono ordinare, ruotare ed eliminare.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Split PDF</source>
+            <translation>Dividi PDF</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Extracts pages from a document or divides it into more files.</source>
+            <translation>Estrae pagine da un documento o lo divide in più file.</translation>
         </message>
     </context>
     <context>
@@ -29916,6 +30039,149 @@ Vuoi eseguire l'operazione?</translation>
             <location line="+135" />
             <source>Select color profile directory</source>
             <translation>Seleziona la cartella dei profili colore</translation>
+        </message>
+    </context>
+    <context>
+        <name>pdfviewer::PDFWelcomePage</name>
+        <message>
+            <location line="+0" />
+            <source>New Document...</source>
+            <translation>Nuovo documento...</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Create PDF from Files...</source>
+            <translation>Crea PDF da file...</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Merge PDF Documents...</source>
+            <translation>Unisci documenti PDF...</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Split PDF Document...</source>
+            <translation>Dividi documento PDF...</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Version %1</source>
+            <translation>Versione %1</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>New Document</source>
+            <translation>Nuovo documento</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Open Document</source>
+            <translation>Apri documento</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>The documents stay on this computer: nothing is sent to the internet.</source>
+            <translation>I documenti restano su questo computer: nulla viene inviato su internet.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>What do you want to do?</source>
+            <translation>Cosa vuoi fare?</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Open a PDF</source>
+            <translation>Apri un PDF</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Read, comment, sign or change a document.</source>
+            <translation>Leggi, commenta, firma o modifica un documento.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>New document</source>
+            <translation>Nuovo documento</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Create an empty A4 document and write into it.</source>
+            <translation>Crea un documento A4 vuoto e scrivici dentro.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Create a PDF from files</source>
+            <translation>Crea un PDF da file</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Word, Excel, PowerPoint, images, text: one PDF from many files.</source>
+            <translation>Word, Excel, PowerPoint, immagini, testo: un solo PDF da tanti file.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Merge PDF documents</source>
+            <translation>Unisci documenti PDF</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Join documents, sort, rotate and remove the pages.</source>
+            <translation>Unisci documenti, ordina, ruota ed elimina le pagine.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Split a PDF</source>
+            <translation>Dividi un PDF</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Extract pages or divide a document into more files.</source>
+            <translation>Estrai pagine o dividi un documento in più file.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Recognize text (OCR)</source>
+            <translation>Riconosci testo (OCR)</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Make scanned documents searchable, more files at once.</source>
+            <translation>Rendi ricercabili i documenti scansionati, anche più file insieme.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Recent documents</source>
+            <translation>Documenti recenti</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>File &apos;%1&apos; no longer exists.</source>
+            <translation>Il file &apos;%1&apos; non esiste più.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>No recent documents. The documents you open will be listed here.</source>
+            <translation>Nessun documento recente. I documenti che apri compariranno qui.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>New document.pdf</source>
+            <translation>Nuovo documento.pdf</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>PDF document (*.pdf)</source>
+            <translation>Documento PDF (*.pdf)</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Error</source>
+            <translation>Errore</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>The tool for merging and splitting of PDF documents cannot be started (%1).</source>
+            <translation>Impossibile avviare lo strumento per unire e dividere i PDF (%1).</translation>
         </message>
     </context>
 </TS>

@@ -48,6 +48,7 @@
 #include "pdfwidgetutils.h"
 #include "pdfactioncombobox.h"
 #include "pdfeditorribbon.h"
+#include "pdfwelcomepage.h"
 
 #include <QPainter>
 #include <QFileDialog>
@@ -305,6 +306,11 @@ PDFEditorMainWindow::PDFEditorMainWindow(QWidget* parent) :
     m_sidebarDockWidget->setObjectName("SidebarDockWidget");
     m_sidebarDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     m_sidebarDockWidget->setWidget(m_sidebarWidget);
+
+    // The sidebar is a fixed strip of buttons with a panel (as in the office applications),
+    // it has no title bar - it is shown and hidden by the Sidebar button of the ribbon
+    m_sidebarDockWidget->setTitleBarWidget(new QWidget(m_sidebarDockWidget));
+    m_sidebarDockWidget->setFeatures(QDockWidget::DockWidgetClosable);
     addDockWidget(Qt::LeftDockWidgetArea, m_sidebarDockWidget);
     m_sidebarDockWidget->hide();
     connect(m_sidebarWidget, &PDFSidebarWidget::actionTriggered, m_programController, &PDFProgramController::onActionTriggered);
@@ -359,6 +365,10 @@ PDFEditorMainWindow::PDFEditorMainWindow(QWidget* parent) :
 
     m_actionManager->styleActions();
     m_programController->initActionComboBox(actionComboBox);
+
+    // Start page is displayed, while no document is opened; it provides actions for the ribbon
+    m_welcomePage = new PDFWelcomePage(this, m_actionManager, m_programController, m_programController->getPdfWidget());
+    addAction(m_welcomePage->getNewDocumentAction());
 
     createRibbon(toggleAdvancedFindAction, m_sidebarWidget->getOutlineNewItemAction(), actionComboBox);
 
@@ -535,6 +545,11 @@ void PDFEditorMainWindow::setStatusBarMessage(QString message, int time)
 
 void PDFEditorMainWindow::setDocument(const pdf::PDFModifiedDocument& document)
 {
+    if (m_welcomePage)
+    {
+        m_welcomePage->setVisible(!document);
+    }
+
     if (m_sidebarWidget)
     {
         m_sidebarWidget->setDocument(document, *m_programController->getSignatures());
