@@ -40,6 +40,10 @@
 #include <QFileDialog>
 #include <QSettings>
 #include <QCoreApplication>
+#include <QFrame>
+#include <QLabel>
+#include <QPushButton>
+#include <QHBoxLayout>
 
 namespace pdfplugin
 {
@@ -49,6 +53,7 @@ EditorPlugin::EditorPlugin() :
     m_actions({ }),
     m_tools({ }),
     m_editorWidget(nullptr),
+    m_messageBar(nullptr),
     m_scene(nullptr),
     m_sceneSelectionChangeEnabled(true),
     m_isSaving(false),
@@ -787,6 +792,7 @@ void EditorPlugin::setActive(bool active)
 
         m_actions[Activate]->setChecked(active);
         updateActions();
+        updateMessageBar();
 
         // If editor is not active, remove the widget
         if (m_editorWidget && !active)
@@ -795,6 +801,95 @@ void EditorPlugin::setActive(bool active)
             m_editorWidget = nullptr;
         }
     }
+}
+
+void EditorPlugin::updateMessageBar()
+{
+    const bool isActive = m_scene.isActive();
+
+    if (!m_messageBar)
+    {
+        if (!isActive)
+        {
+            return;
+        }
+
+        // Colors of the message bar are fixed, so it is readable both in the light and in the dark theme
+        QFrame* messageBar = new QFrame(m_widget);
+        messageBar->setObjectName("editorMessageBar");
+        messageBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+        messageBar->setStyleSheet("QFrame#editorMessageBar { background: #fff4ce; border: none; border-bottom: 1px solid #e5c365; }"
+                                  "QFrame#editorMessageBar QLabel { color: #201f1e; background: transparent; }"
+                                  "QFrame#editorMessageBar QLabel#editorMessageBarTitle { font-weight: bold; }"
+                                  "QFrame#editorMessageBar QPushButton { color: #201f1e; background: #ffffff; border: 1px solid #8a8886; border-radius: 3px; padding: 4px 12px; }"
+                                  "QFrame#editorMessageBar QPushButton:hover { background: #f3f2f1; }"
+                                  "QFrame#editorMessageBar QPushButton#editorMessageBarApply { color: #ffffff; background: #0b2f5b; border-color: #0b2f5b; font-weight: bold; }"
+                                  "QFrame#editorMessageBar QPushButton#editorMessageBarApply:hover { background: #154a8a; }");
+
+        QLabel* titleLabel = new QLabel(tr("Editing is on."), messageBar);
+        titleLabel->setObjectName("editorMessageBarTitle");
+
+        QLabel* textLabel = new QLabel(tr("Double-click a text or an image to change it. Click it to select it, drag it to move it, press Delete to remove it."), messageBar);
+        textLabel->setWordWrap(true);
+
+        QPushButton* applyButton = new QPushButton(tr("Apply changes"), messageBar);
+        applyButton->setObjectName("editorMessageBarApply");
+        applyButton->setToolTip(tr("Write the changes to the document and finish the editing."));
+        applyButton->setFocusPolicy(Qt::NoFocus);
+
+        QPushButton* discardButton = new QPushButton(tr("Discard changes"), messageBar);
+        discardButton->setToolTip(tr("Finish the editing, the document stays as it was."));
+        discardButton->setFocusPolicy(Qt::NoFocus);
+
+        QHBoxLayout* messageBarLayout = new QHBoxLayout(messageBar);
+        messageBarLayout->setContentsMargins(12, 6, 12, 6);
+        messageBarLayout->setSpacing(10);
+        messageBarLayout->addWidget(titleLabel);
+        messageBarLayout->addWidget(textLabel, 1);
+        messageBarLayout->addWidget(applyButton);
+        messageBarLayout->addWidget(discardButton);
+
+        connect(applyButton, &QPushButton::clicked, this, &EditorPlugin::onApplyChangesClicked);
+        connect(discardButton, &QPushButton::clicked, this, &EditorPlugin::onDiscardChangesClicked);
+
+        m_widget->setTopPanel(messageBar);
+        m_messageBar = messageBar;
+    }
+
+    m_messageBar->setVisible(isActive);
+}
+
+void EditorPlugin::onApplyChangesClicked()
+{
+    if (!m_scene.isActive())
+    {
+        return;
+    }
+
+    if (writeUnwrittenChanges())
+    {
+        setActive(false);
+    }
+}
+
+void EditorPlugin::onDiscardChangesClicked()
+{
+    if (!m_scene.isActive())
+    {
+        return;
+    }
+
+    // The first undo state is the initial state of the scene
+    if (m_undoStates.size() > 1)
+    {
+        auto answer = QMessageBox::question(m_dataExchangeInterface->getMainWindow(), tr("Discard Changes"), tr("The changes to the page content will be lost. Do you want to continue?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (answer != QMessageBox::Yes)
+        {
+            return;
+        }
+    }
+
+    setActive(false);
 }
 
 void EditorPlugin::onSetActive(bool active)

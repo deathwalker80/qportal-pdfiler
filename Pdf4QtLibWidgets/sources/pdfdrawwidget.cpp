@@ -63,9 +63,12 @@ PDFWidget::PDFWidget(const PDFCMSManager* cmsManager, RendererEngine engine, QWi
 
     QGridLayout* layout = new QGridLayout(this);
     layout->setSpacing(0);
-    layout->addWidget(m_drawWidget->getWidget(), 0, 0);
-    layout->addWidget(m_horizontalScrollBar, 1, 0);
-    layout->addWidget(m_verticalScrollBar, 0, 1);
+    // The first row is reserved for the top panel (see setTopPanel)
+    layout->addWidget(m_drawWidget->getWidget(), 1, 0);
+    layout->addWidget(m_horizontalScrollBar, 2, 0);
+    layout->addWidget(m_verticalScrollBar, 1, 1);
+    layout->setRowStretch(1, 1);
+    layout->setColumnStretch(0, 1);
     layout->setContentsMargins(QMargins());
 
     setLayout(layout);
@@ -234,6 +237,17 @@ void PDFWidget::addInputInterface(IDrawWidgetInputInterface* inputInterface)
             connect(scene, &PDFPageContentScene::sceneActiveStateChanged, this, &PDFWidget::onSceneActiveStateChanged);
         }
     }
+}
+
+void PDFWidget::setTopPanel(QWidget* panel)
+{
+    Q_ASSERT(panel);
+
+    QGridLayout* gridLayout = qobject_cast<QGridLayout*>(layout());
+    Q_ASSERT(gridLayout);
+
+    panel->setParent(this);
+    gridLayout->addWidget(panel, 0, 0, 1, 2);
 }
 
 bool PDFWidget::isAnySceneActive(PDFPageContentScene* sceneToSkip) const

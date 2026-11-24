@@ -24,8 +24,6 @@
 #include "pdfprogramcontroller.h"
 #include "pdfrecentfilemanager.h"
 #include "pdfwidgetutils.h"
-#include "pdfdocumentbuilder.h"
-#include "pdfdocumentwriter.h"
 #include "pdfutils.h"
 
 #include <QDir>
@@ -35,14 +33,12 @@
 #include <QProcess>
 #include <QFileInfo>
 #include <QBoxLayout>
-#include <QFileDialog>
 #include <QGridLayout>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QApplication>
-#include <QStandardPaths>
 
 #include "pdfdbgheap.h"
 
@@ -410,34 +406,9 @@ void PDFWelcomePage::updateStyleSheet()
 
 void PDFWelcomePage::onNewDocument()
 {
-    // The new document is saved first, so it has its file from the beginning
-    // (the changes are then saved by the Save command, as in any other document)
-    const QString directory = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-    QString fileName = QFileDialog::getSaveFileName(m_mainWindow, tr("New Document"), QDir(directory).filePath(tr("New document.pdf")), tr("PDF document (*.pdf)"));
-    if (fileName.isEmpty())
-    {
-        return;
-    }
-
-    if (!fileName.endsWith(".pdf", Qt::CaseInsensitive))
-    {
-        fileName += ".pdf";
-    }
-
-    // Empty page of the size A4 (in points)
-    pdf::PDFDocumentBuilder builder;
-    builder.appendPage(QRectF(0.0, 0.0, 595.276, 841.89));
-    pdf::PDFDocument document = builder.build();
-
-    pdf::PDFDocumentWriter writer(nullptr);
-    pdf::PDFOperationResult result = writer.write(fileName, &document, true);
-    if (!result)
-    {
-        QMessageBox::critical(m_mainWindow, tr("Error"), result.getErrorMessage());
-        return;
-    }
-
-    m_programController->openDocument(fileName);
+    // The document is created without a file, the user is asked
+    // for the file name when the document is saved
+    m_programController->newDocument();
 }
 
 void PDFWelcomePage::onCreatePdf()

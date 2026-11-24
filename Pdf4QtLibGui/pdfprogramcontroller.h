@@ -302,6 +302,10 @@ public:
     Q_DECLARE_FLAGS(Features, Feature)
 
     void openDocument(const QString& fileName);
+
+    /// Creates a new document with one empty page. The document has no file,
+    /// the user is asked for the file name when the document is saved.
+    void newDocument();
     void setDocument(pdf::PDFModifiedDocument document, std::vector<pdf::PDFSignatureVerificationResult> signatureVerificationResult, bool isCurrentSaved);
     void closeDocument();
 

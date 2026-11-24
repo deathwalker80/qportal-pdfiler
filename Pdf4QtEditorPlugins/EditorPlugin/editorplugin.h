@@ -29,6 +29,7 @@
 #include "pdfpagecontenteditorprocessor.h"
 
 #include <QObject>
+#include <QWidget>
 #include <vector>
 #include <functional>
 
@@ -167,6 +168,16 @@ private:
     void updateDockWidget();
     void updateEditedPages();
 
+    /// Shows (or hides) the message bar above the page, which explains how
+    /// the page content is edited and offers to apply or discard the changes.
+    void updateMessageBar();
+
+    /// Writes the edited page content into the document and finishes the editing
+    void onApplyChangesClicked();
+
+    /// Finishes the editing, the changes are not written into the document
+    void onDiscardChangesClicked();
+
     /// Clears both local undo and redo stacks.
     void clearUndoRedo();
 
@@ -199,6 +210,7 @@ private:
     std::array<QAction*, LastAction> m_actions;
     std::array<pdf::PDFWidgetTool*, LastTool> m_tools;
     pdf::PDFPageContentEditorWidget* m_editorWidget;
+    QWidget* m_messageBar;
 
     pdf::PDFPageContentScene m_scene;
     std::map<pdf::PDFInteger, pdf::PDFEditedPageContent> m_editedPageContent;

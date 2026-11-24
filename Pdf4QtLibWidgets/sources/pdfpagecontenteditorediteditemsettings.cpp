@@ -33,6 +33,8 @@
 #include <QImageReader>
 #include <QStandardPaths>
 #include <QColorDialog>
+#include <QCheckBox>
+#include <QLabel>
 
 namespace pdf
 {
@@ -70,6 +72,199 @@ PDFPageContentEditorEditedItemSettings::PDFPageContentEditorEditedItemSettings(Q
     connect(ui->penColorCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &PDFPageContentEditorEditedItemSettings::onPenColorComboIndexChanged);
     connect(ui->brushColorCombo->lineEdit(), &QLineEdit::editingFinished, this, &PDFPageContentEditorEditedItemSettings::onBrushColorComboTextChanged);
     connect(ui->brushColorCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &PDFPageContentEditorEditedItemSettings::onBrushColorComboIndexChanged);
+
+    // The text is edited as plain text, formatting codes are displayed on demand only
+    QLabel* textHintLabel = new QLabel(tr("Type the new text and confirm with OK."), ui->textGroupBox);
+    textHintLabel->setWordWrap(true);
+    ui->verticalLayout_3->insertWidget(0, textHintLabel);
+
+    m_showTextCodesCheckBox = new QCheckBox(tr("Show formatting codes (for experts)"), ui->textGroupBox);
+    ui->verticalLayout_3->addWidget(m_showTextCodesCheckBox);
+    connect(m_showTextCodesCheckBox, &QCheckBox::toggled, this, &PDFPageContentEditorEditedItemSettings::onShowTextCodesToggled);
+}
+
+bool PDFPageContentEditorEditedItemSettings::parseTextMarkup(const QString& markup, std::vector<TextLine>& lines)
+{
+    lines.clear();
+
+    auto unescape = [](QString text)
+    {
+        text.replace("&lt;", "<");
+        text.replace("&gt;", ">");
+        text.replace("&quot;", "\"");
+        text.replace("&apos;", "'");
+        text.replace("&#39;", "'");
+        text.replace("&amp;", "&");
+        return text;
+    };
+
+    // Advance (in thousandths of the font size, negative value moves the text
+    // to the right), which is displayed as a space between the words
+    constexpr double WORD_SPACE_ADVANCE = -180.0;
+
+    TextLine currentLine;
+    QString pendingCodes;
+    bool hasText = false;
+
+    qsizetype i = 0;
+    const qsizetype count = markup.size();
+    while (i < count)
+    {
+        if (markup[i] == QChar('<'))
+        {
+            const qsizetype end = markup.indexOf(QChar('>'), i);
+            if (end == -1)
+            {
+                // Invalid code
+                return false;
+            }
+
+            const QString code = markup.mid(i, end - i + 1);
+            i = end + 1;
+
+            if (code.startsWith("<character"))
+            {
+                // Character without unicode value, it cannot be typed by the user
+                return false;
+            }
+
+            if (!hasText)
+            {
+                currentLine.prefix += code;
+                currentLine.markup += code;
+                continue;
+            }
+
+            if (code.startsWith("<space") && pendingCodes.isEmpty())
+            {
+                currentLine.markup += code;
+
+                const qsizetype valueStart = code.indexOf(QChar('"'));
+                const qsizetype valueEnd = code.indexOf(QChar('"'), valueStart + 1);
+                if (valueStart != -1 && valueEnd != -1)
+                {
+                    bool ok = false;
+                    const double advance = code.mid(valueStart + 1, valueEnd - valueStart - 1).toDouble(&ok);
+                    if (ok && advance <= WORD_SPACE_ADVANCE && !currentLine.text.endsWith(QChar(' ')))
+                    {
+                        currentLine.text += QChar(' ');
+                    }
+                }
+                continue;
+            }
+
+            pendingCodes += code;
+        }
+        else
+        {
+            qsizetype end = markup.indexOf(QChar('<'), i);
+            if (end == -1)
+            {
+                end = count;
+            }
+
+            const QString rawText = markup.mid(i, end - i);
+            const QString text = unescape(rawText);
+            i = end;
+
+            if (text.contains(QChar('\n')))
+            {
+                // Line break is used as the separator of the lines
+                return false;
+            }
+
+            if (!pendingCodes.isEmpty())
+            {
+                if (pendingCodes.contains("<tpos") || pendingCodes.contains("<tmatrix"))
+                {
+                    // Text is positioned - new line
+                    lines.push_back(currentLine);
+                    currentLine = TextLine();
+                    currentLine.prefix = pendingCodes;
+                }
+
+                currentLine.markup += pendingCodes;
+                pendingCodes.clear();
+            }
+
+            currentLine.markup += rawText;
+            currentLine.text += text;
+            hasText = true;
+        }
+    }
+
+    currentLine.markup += pendingCodes;
+    lines.push_back(currentLine);
+    return true;
+}
+
+QString PDFPageContentEditorEditedItemSettings::createTextMarkup(const QString& plainText) const
+{
+    if (m_textLines.empty())
+    {
+        return plainText.toHtmlEscaped();
+    }
+
+    QStringList texts = plainText.split(QChar('\n'));
+
+    // Lines, which were added by the user, have no position - they continue on the last line
+    while (texts.size() > qsizetype(m_textLines.size()))
+    {
+        const QString text = texts.takeLast();
+        texts.back() += QChar(' ') + text;
+    }
+
+    QString markup;
+    for (size_t i = 0; i < m_textLines.size(); ++i)
+    {
+        const TextLine& line = m_textLines[i];
+        const QString text = qsizetype(i) < texts.size() ? texts[qsizetype(i)] : QString();
+
+        if (text == line.text)
+        {
+            // Unchanged line keeps all its formatting codes
+            markup += line.markup;
+        }
+        else
+        {
+            markup += line.prefix;
+            markup += text.toHtmlEscaped();
+        }
+    }
+
+    return markup;
+}
+
+QString PDFPageContentEditorEditedItemSettings::getPlainTextOfLines() const
+{
+    QStringList texts;
+    for (const TextLine& line : m_textLines)
+    {
+        texts << line.text;
+    }
+    return texts.join(QChar('\n'));
+}
+
+void PDFPageContentEditorEditedItemSettings::onShowTextCodesToggled(bool checked)
+{
+    if (checked)
+    {
+        ui->plainTextEdit->setPlainText(createTextMarkup(ui->plainTextEdit->toPlainText()));
+        return;
+    }
+
+    std::vector<TextLine> lines;
+    if (parseTextMarkup(ui->plainTextEdit->toPlainText(), lines))
+    {
+        m_textLines = std::move(lines);
+        ui->plainTextEdit->setPlainText(getPlainTextOfLines());
+    }
+    else
+    {
+        // Text cannot be displayed without the formatting codes
+        QSignalBlocker blocker(m_showTextCodesCheckBox);
+        m_showTextCodesCheckBox->setChecked(true);
+    }
 }
 
 QIcon PDFPageContentEditorEditedItemSettings::getIconForColor(QColor color) const
@@ -111,7 +306,22 @@ void PDFPageContentEditorEditedItemSettings::loadFromElement(PDFPageContentEleme
     {
         ui->tabWidget->addTab(ui->textTab, tr("Text"));
         QString text = textElement->getItemsAsText();
-        ui->plainTextEdit->setPlainText(text);
+
+        QSignalBlocker blocker(m_showTextCodesCheckBox);
+        if (parseTextMarkup(text, m_textLines))
+        {
+            m_showTextCodesCheckBox->setChecked(false);
+            m_showTextCodesCheckBox->setEnabled(true);
+            ui->plainTextEdit->setPlainText(getPlainTextOfLines());
+        }
+        else
+        {
+            // Text cannot be displayed without the formatting codes
+            m_textLines.clear();
+            m_showTextCodesCheckBox->setChecked(true);
+            m_showTextCodesCheckBox->setEnabled(false);
+            ui->plainTextEdit->setPlainText(text);
+        }
     }
 
     if (editedElement->getElement()->asText() || editedElement->getElement()->asPath())
@@ -259,7 +469,8 @@ void PDFPageContentEditorEditedItemSettings::saveToElement(PDFPageContentElement
 
     if (PDFEditedPageContentElementText* textElement = editedElement->getElement()->asText())
     {
-        textElement->setItemsAsText(ui->plainTextEdit->toPlainText());
+        const QString text = ui->plainTextEdit->toPlainText();
+        textElement->setItemsAsText(m_showTextCodesCheckBox->isChecked() ? text : createTextMarkup(text));
     }
 
     if (PDFEditedPageContentElementPath* pathElement = editedElement->getElement()->asPath())

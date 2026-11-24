@@ -130,6 +130,11 @@ public:
     /// Returns true, if any scene is active
     bool isAnySceneActive(PDFPageContentScene* sceneToSkip) const;
 
+    /// Places a panel above the page area (for example a message bar
+    /// of a plugin). The panel spans the whole width of the widget.
+    /// \param panel Panel, the widget becomes its parent
+    void setTopPanel(QWidget* panel);
+
 signals:
     void sceneActivityChanged();
     void pageRenderingErrorsChanged(pdf::PDFInteger pageIndex, int errorsCount);

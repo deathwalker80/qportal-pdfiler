@@ -11927,6 +11927,16 @@ li.checked::marker { content: "\2612"; }
     <context>
         <name>pdf::PDFPageContentEditorEditedItemSettings</name>
         <message>
+            <location line="+0" />
+            <source>Show formatting codes (for experts)</source>
+            <translation>Mostra i codici di formattazione (per esperti)</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Type the new text and confirm with OK.</source>
+            <translation>Scrivi il nuovo testo e conferma con OK.</translation>
+        </message>
+        <message>
             <location filename="../Pdf4QtLibWidgets/sources/pdfpagecontenteditorediteditemsettings.cpp" line="+56" />
             <location line="+6" />
             <source>Solid</source>
@@ -21893,6 +21903,46 @@ li.checked::marker { content: "\2612"; }
     <context>
         <name>pdfplugin::EditorPlugin</name>
         <message>
+            <location line="+0" />
+            <source>The changes to the page content will be lost. Do you want to continue?</source>
+            <translation>Le modifiche al contenuto della pagina andranno perse. Vuoi continuare?</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Discard Changes</source>
+            <translation>Annulla modifiche</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Finish the editing, the document stays as it was.</source>
+            <translation>Chiude la modifica, il documento resta com&apos;era.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Discard changes</source>
+            <translation>Annulla modifiche</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Write the changes to the document and finish the editing.</source>
+            <translation>Scrive le modifiche nel documento e chiude la modifica.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Apply changes</source>
+            <translation>Applica modifiche</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Double-click a text or an image to change it. Click it to select it, drag it to move it, press Delete to remove it.</source>
+            <translation>Fai doppio clic su un testo o su un&apos;immagine per cambiarlo. Con un clic lo selezioni, trascinandolo lo sposti, con il tasto Canc lo elimini.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Editing is on.</source>
+            <translation>Modifica attiva.</translation>
+        </message>
+        <message>
             <location filename="../Pdf4QtEditorPlugins/EditorPlugin/editorplugin.cpp" line="+66" />
             <source>&amp;Edit page content</source>
             <translation>&amp;Modifica contenuto pagina</translation>
@@ -28768,6 +28818,21 @@ Se esiste una versione integrata della lingua, verrà usata di nuovo. I progetti
     </context>
     <context>
         <name>pdfviewer::PDFProgramController</name>
+        <message>
+            <location line="+0" />
+            <source>New document</source>
+            <translation>Nuovo documento</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>The document has not been saved yet. Save it first, then it can be sent.</source>
+            <translation>Il documento non è ancora stato salvato. Salvalo, poi potrai inviarlo.</translation>
+        </message>
+        <message>
+            <location line="+0" />
+            <source>Send by E-Mail</source>
+            <translation>Invia per e-mail</translation>
+        </message>
         <message>
             <location filename="../Pdf4QtLibGui/pdfprogramcontroller.cpp" line="+868" />
             <source>Printing document</source>

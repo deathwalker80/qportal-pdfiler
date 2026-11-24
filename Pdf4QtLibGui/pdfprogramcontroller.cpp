@@ -69,6 +69,8 @@
 #include <QDesktopServices>
 #include <QApplication>
 #include <QFileDialog>
+#include <QStandardPaths>
+#include <QDir>
 #include <QtConcurrent/QtConcurrent>
 #include <QInputDialog>
 #include <QMainWindow>
@@ -1279,16 +1281,40 @@ void PDFProgramController::performSaveAs()
         return;
     }
 
-    QFileInfo fileInfo(m_fileInfo.originalFileName);
-    QString saveFileName = QFileDialog::getSaveFileName(m_mainWindow, tr("Save As"), fileInfo.dir().absoluteFilePath(m_fileInfo.originalFileName), tr("Portable Document (*.pdf);;All files (*.*)"));
+    QString proposedFileName;
+    if (m_fileInfo.originalFileName.isEmpty())
+    {
+        // New document, which has not been saved yet
+        const QString directory = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+        proposedFileName = QDir(directory).filePath(m_fileInfo.fileName + ".pdf");
+    }
+    else
+    {
+        QFileInfo fileInfo(m_fileInfo.originalFileName);
+        proposedFileName = fileInfo.dir().absoluteFilePath(m_fileInfo.originalFileName);
+    }
+
+    QString saveFileName = QFileDialog::getSaveFileName(m_mainWindow, tr("Save As"), proposedFileName, tr("Portable Document (*.pdf);;All files (*.*)"));
     if (!saveFileName.isEmpty())
     {
+        if (QFileInfo(saveFileName).suffix().isEmpty())
+        {
+            saveFileName += ".pdf";
+        }
+
         saveDocument(saveFileName);
     }
 }
 
 void PDFProgramController::performSave()
 {
+    if (m_fileInfo.originalFileName.isEmpty())
+    {
+        // New document has no file yet, so the user is asked for it
+        performSaveAs();
+        return;
+    }
+
     if (!askForWriteUnwrittenChanges())
     {
         return;
@@ -1508,6 +1534,12 @@ void PDFProgramController::onActionSendByEMailTriggered()
     if (subject.isEmpty())
     {
         subject = m_fileInfo.fileName;
+    }
+
+    if (m_fileInfo.originalFileName.isEmpty())
+    {
+        QMessageBox::information(m_mainWindow, tr("Send by E-Mail"), tr("The document has not been saved yet. Save it first, then it can be sent."));
+        return;
     }
 
     if (!PDFSendMail::sendMail(m_mainWindow, subject, m_fileInfo.originalFileName))
@@ -2271,6 +2303,34 @@ void PDFProgramController::openDocument(const QString& fileName)
     updateActionsAvailability();
 }
 
+void PDFProgramController::newDocument()
+{
+    if (!askForSaveDocumentBeforeClose())
+    {
+        return;
+    }
+
+    closeDocument();
+
+    // Empty page of the size A4 (in points)
+    pdf::PDFDocumentBuilder builder;
+    builder.appendPage(QRectF(0.0, 0.0, 595.276, 841.89));
+
+    // The document has no file, only the name displayed in the title of the window
+    m_fileInfo.fileName = tr("New document");
+
+    m_pdfDocument = pdf::PDFDocumentPointer(new pdf::PDFDocument(builder.build()));
+    pdf::PDFModifiedDocument document(m_pdfDocument.data(), m_optionalContentActivity);
+    setDocument(document, {}, true);
+
+    if (m_formManager)
+    {
+        m_formManager->performPaging();
+    }
+
+    updateActionsAvailability();
+}
+
 void PDFProgramController::onDocumentReadingFinished()
 {
     QApplication::restoreOverrideCursor();
@@ -2464,7 +2524,8 @@ void PDFProgramController::setDocument(pdf::PDFModifiedDocument document, std::v
 
         QSettings settings(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), QCoreApplication::applicationName());
         settings.beginGroup("PageLayoutPerDocumentSettings");
-        QString pageLayoutStored = settings.value(m_fileInfo.absoluteFilePath, pdf::PDFPageLayoutUtils::convertPageLayoutToString(catalog->getPageLayout())).toString();
+        const QString pageLayoutDefault = pdf::PDFPageLayoutUtils::convertPageLayoutToString(catalog->getPageLayout());
+        QString pageLayoutStored = !m_fileInfo.absoluteFilePath.isEmpty() ? settings.value(m_fileInfo.absoluteFilePath, pageLayoutDefault).toString() : pageLayoutDefault;
         settings.endGroup();
 
         const pdf::PageLayout pageLayout = pdf::PDFPageLayoutUtils::convertStringToPageLayout(pageLayoutStored, catalog->getPageLayout());
